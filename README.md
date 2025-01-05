@@ -35,7 +35,11 @@ cd BandGap-ml
 pip install -e .
 ```
 - Where -e means "editable" mode.
- 
+
+## Data source
+For training Random Forest Classifier and Regression models, we adopted data provided in the following paper:
+Zhuo. Y, Mansouri Tehrani., and Brgoch. J, Predicting the band gaps of inorganic solids by machine learning, J. Phys. Chem. Lett. 2018, 9, 1668-1673.
+
 ## Models construction
 To perform model training, validation, and testing, as well as saving your trained model, run the following command in the CLI:
 ```bash
@@ -77,6 +81,9 @@ print(predictions)
 ## Author
 Dr. Aleksei Krasnov
 alexeykrasnov1989@gmail.com
+
+## Citation
+- Zhuo. Y, Mansouri Tehrani., and Brgoch. J, Predicting the band gaps of inorganic solids by machine learning, J. Phys. Chem. Lett. 2018, 9, 1668-1673. https://doi.org/10.1021/acs.jpclett.8b00124
 
 ## License
 This project is licensed under the MIT - see the [LICENSE.md](LICENSE.md) file for details.
