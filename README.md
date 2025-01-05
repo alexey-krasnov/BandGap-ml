@@ -1,10 +1,9 @@
 # BandGap-ml v1.0
 
 [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://GitHub.com/BandGap-ml/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://github.com/alexey-krasnov/BandGap-ml/graphs/commit-activity)
 [![GitHub issues](https://img.shields.io/github/issues/alexey-krasnov/BandGap-ml.svg)](https://github.com/alexey-krasnov/BandGap-ml/issues)
-[![GitHub contributors](https://img.shields.io/github/contributors/alexey-krasnov/BandGap-ml.svg)](https://github.com/alexey-krasnov/BandGap-ml/contributors)
-
+[![GitHub contributors](https://img.shields.io/github/contributors/alexey-krasnov/BandGap-ml.svg)](https://github.com/alexey-krasnov/BandGap-ml/graphs/contributors)
 
 ## Table of Contents
 - [Project Description](#project-description)
