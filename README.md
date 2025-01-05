@@ -2,19 +2,16 @@
 
 [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://GitHub.com/BandGap-ml/graphs/commit-activity)
-[![GitHub issues](https://img.shields.io/github/issues/alexey-krasnov/Band_Gap_ML.svg)](https://github.com/alexey-krasnov/Band_Gap_ML/issues)
-[![GitHub contributors](https://img.shields.io/github/contributors/alexey-krasnov/Band_Gap_ML.svg)](https://github.com/alexey-krasnov/Band_Gap_ML/graphs/contributors)
+[![GitHub issues](https://img.shields.io/github/issues/alexey-krasnov/BandGap-ml.svg)](https://github.com/alexey-krasnov/BandGap-ml/issues)
+[![GitHub contributors](https://img.shields.io/github/contributors/alexey-krasnov/BandGap-ml.svg)](https://github.com/alexey-krasnov/BandGap-ml/contributors)
 
 
 ## Table of Contents
 - [Project Description](#project-description)
 - [Prepare Workspace Environment with Conda](#prepare-workspace-environment-with-conda)
-- [Model Construction](#model-construction)
-- [Models Download](#models-download)
-- [Jupyter Notebook](#jupyter-notebook)
+- [Models Construction](#models-construction)
+- [Usage](#usage)
 - [Author](#author)
-- [Citation](#citation)
-- [References](#references)
 - [License](#license)
 
 ## Project Description
@@ -30,41 +27,57 @@ conda activate bandgap-ml
 # 2.1 From PyPI
 TODO: upload
 
-# 2.2 Or, install from the GitHub repository
-pip install git+https://github.com/alexey-krasnov/Band_Gap_ML.git
+# 2.2 Or install from the GitHub repository
+pip install git+https://github.com/alexey-krasnov/BandGap-ml.git
 
-# 2.3 Or, install in editable mode from the GitHub repository
-git clone https://github.com/alexey-krasnov/Band_Gap_ML.git
-cd Band_Gap_ML
-pip install -r requirements.txt
+# 2.3 Or install in editable mode from the GitHub repository
+git clone https://github.com/alexey-krasnov/BandGap-ml.git
+cd BandGap-ml
 pip install -e .
 ```
 - Where -e means "editable" mode.
  
-## Model construction
+## Models construction
 To perform model training, validation, and testing, as well as saving your trained model, run the following command in the CLI:
 ```bash
 python band_gap_ml/model_training.py
 ```
 This command executes the training and evaluation of RandomForestClassifier and RandomForestRegressor models using the predefined paths in the module.
 
-## Models download
-If the models have not been downloaded yet, download them from Zenodo as an archive: [XXX](XXX). 
-Unzip it into the [band_gap_ml/models](band_gap_ml/models) directory. The models directory should contain the pre-trained models for band gap prediction.
-
 ## Usage
-You can try out the user frontend web interface at TODO
+We provide several options to use the package
 
-## Jupyter Notebook
-The [band_gap_workflow.ipynb](notebooks/band_gap_workflow.ipynb) notebook in the `notebooks` directory provides an easy-to-use interface for training models and use them for Band Gap predictions.
+### 1. Jupyter Notebook file:
+[Jupyter Notebook file](notebooks/band_gap_prediction_workflow.ipynb) in the `notebooks` directory provides an easy-to-use interface for training models and use them for Band Gap predictions.
+
+### 2. Use package inside your Python Code:
+Train models
+```python
+from band_gap_ml.model_training import train_and_save_models
+
+train_and_save_models()
+```
+Use models to make predictions of Band Gaps
+```python
+from band_gap_ml.band_gap_predictor import predict_eg_from_file, predict_eg_from_formula    
+
+# Prediction from csv file containing chemical formulas
+input_file = '../samples/to_predict.csv'
+predictions = predict_eg_from_file(input_file)
+print(predictions)
+
+#  Prediction from one or multiple chemical formula
+formula_1 = 'BaLa2In2O7'
+formula_2 = 'TiO2'
+formula_3 = 'Bi4Ti3O12'
+
+predictions = predict_eg_from_formula(formula=[formula_1, formula_2, formula_3])
+print(predictions)
+```
 
 ## Author
 Dr. Aleksei Krasnov
 alexeykrasnov1989@gmail.com
-
-## Citation
-
-## References
 
 ## License
 This project is licensed under the MIT - see the [LICENSE.md](LICENSE.md) file for details.
