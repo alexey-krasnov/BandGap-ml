@@ -6,3 +6,4 @@ streamlit<1.39.0
 streamlit-navigation-bar
 streamlit_extras
 streamlit-toggle-switch
+pymatgen>=2024.10.3
