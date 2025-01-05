@@ -1,0 +1,15 @@
+*.pth
+*.ckpt
+*.docx
+*.pdf
+*.zip
+*models.zip
+__pycache__/
+/build/
+/dist/
+/.pytest_cache/
+*.egg-info
+*.devcontainer
+*.DS_Store
+/comparison
+*.ipynb_checkpoints*
