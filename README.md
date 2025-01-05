@@ -79,9 +79,10 @@ print(predictions)
 ```
 
 ### 3. Use frontend web interface
-Go to https://XXX
+- Go to https://bandgap-ml.streamlit.app/ to check out the web interface 
 
-Or run web interface on your local machine. In CLI run:
+
+- Or run web interface on your local machine. In CLI run the command:
 ```bash
 streamlit run frontend/band_gap_ml_app.py --server.address=0.0.0.0 --server.port=5005
 ```
