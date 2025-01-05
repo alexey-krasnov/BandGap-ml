@@ -80,3 +80,37 @@ if formulas_input:
 
         # Call the function to allow file download
         download_predictions_as_csv(prediction_df, prefix="predicted_band_gaps_formulas")
+
+def show_footer():
+    st.markdown(
+        """
+        <style>
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #f2f2f2;
+            color: black;
+            text-align: center;
+            padding: 5px;
+            z-index: 999;
+            font-size: 12px;
+        }
+        .footer a {
+            color: #1f77b4;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        </style>
+        <div class="footer">
+            <p>&copy; 2024 BandGap-ml. Predicting material band gaps based on chemical composition. <br>
+            Developed by <a href="https://github.com/alexey-krasnov" target="_blank">Aleksei Krasnov</a>. All rights reserved.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+show_footer()

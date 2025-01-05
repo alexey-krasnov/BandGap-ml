@@ -78,6 +78,15 @@ predictions = predict_eg_from_formula(formula=[formula_1, formula_2, formula_3])
 print(predictions)
 ```
 
+### 3. Use frontend web interface
+Go to https://XXX
+
+Or run web interface on your local machine. In CLI run:
+```bash
+streamlit run frontend/band_gap_ml_app.py --server.address=0.0.0.0 --server.port=5005
+```
+The command will refer you to the BandGap-ml user web interface.
+
 ## Author
 Dr. Aleksei Krasnov
 alexeykrasnov1989@gmail.com
