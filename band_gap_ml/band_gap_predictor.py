@@ -1,6 +1,5 @@
 import argparse
 import pandas as pd
-from sqlalchemy.util import portable_instancemethod
 
 from band_gap_ml.models import load_model
 from band_gap_ml.vectorizer import FormulaVectorizer
@@ -89,19 +88,20 @@ def load_input_data(file_path):
     return input_data
 
 
-def predict_eg_from_file(file_path):
+def predict_eg_from_file(file_path=None, input_data=None):
     """
     Predict band gaps from an input file containing chemical formulas.
 
     Parameters:
-        file_path (str): Path to the input file.
+        file_path (str): Path to the input file. Default is None
+        input_data (pd.DataFrame, optional): Input data with 'Composition' column. Defaults to None.
 
     Returns:
         list: Predicted band gaps.
     """
-    # Load input data
-    input_data = load_input_data(file_path)
-
+    if file_path:
+        # Load input data
+        input_data = load_input_data(file_path)
     # Prepare feature vectors
     X = prepare_features(input_data)
 
