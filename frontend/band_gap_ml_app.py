@@ -4,6 +4,7 @@ from band_gap_ml.band_gap_predictor import predict_eg_from_file, predict_eg_from
 from band_gap_ml.model_training import train_and_save_models
 from datetime import datetime
 
+
 # Set title and description
 st.title('BandGap-ml: Band Gap Prediction')
 st.write("""
@@ -40,7 +41,7 @@ def download_predictions_as_csv(data_frame, prefix="predicted_band_gaps"):
     )
 
 # File upload for CSV
-uploaded_file = st.file_uploader("Upload CSV file with chemical formulas", type=["csv"])
+uploaded_file = st.file_uploader("Upload CSV file with chemical formulas written in the first column. ", type=["csv"])
 if uploaded_file:
     try:
         input_data = pd.read_csv(uploaded_file)

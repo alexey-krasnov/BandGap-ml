@@ -102,6 +102,13 @@ def predict_eg_from_file(file_path=None, input_data=None):
     if file_path:
         # Load input data
         input_data = load_input_data(file_path)
+
+     # Ensure the column for formulas is named 'Composition'
+    if 'Composition' not in input_data.columns:
+        # Assume the first column contains the formulas
+        first_column = input_data.columns[0]
+        input_data.rename(columns={first_column: 'Composition'}, inplace=True)
+    print(input_data)
     # Prepare feature vectors
     X = prepare_features(input_data)
 
