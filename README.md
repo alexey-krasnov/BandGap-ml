@@ -14,7 +14,9 @@
 - [License](#license)
 
 ## Project Description
-Project for predicting band gaps of inorganic materials by using ML models
+Project for predicting band gaps of inorganic materials by using ML models.
+
+Try out new Frontend Web Interface: https://bandgap-ml.streamlit.app/
 
 ## Prepare Python Workspace Environment with Conda
 ```bash
