@@ -31,7 +31,13 @@ setup(
     ],
 
     url="https://github.com/alexey-krasnov/Band_Gap_ML",
-    packages=find_packages(exclude=["tests", "tests.*", "models", "Benchmark"]),
-    package_dir={'band_gap_ml': 'band_gap_ml'},
+    packages=find_packages(exclude=["tests", "tests.*", "Benchmark"]),
+    include_package_data=True,  # Ensure package data is included
+    package_data={
+        'band_gap_ml': [
+            'data/*.csv',  # Include all CSV files in the data subfolder
+            'models/*.pkl',  # Include all model files in the models subfolder
+        ],
+    },
     install_requires=read_requirements(),
 )
