@@ -7,12 +7,14 @@ from pathlib import Path
 # Get the absolute path of the current file's directory
 CURRENT_DIR = Path(__file__).resolve().parent
 
+
 class ModelsNames(NamedTuple):
     """Class with model file names for classification and regression tasks."""
     classification_model: str
     scaler_classification_model: str
     regression_model: str
     scaler_regression_model: str
+
 
 # Creating an instance of ModelsNames
 models_names = ModelsNames(
@@ -21,6 +23,7 @@ models_names = ModelsNames(
     regression_model='regression_model.pkl',
     scaler_regression_model='scaler_reg.pkl',
 )
+
 
 class Config:
     """

@@ -1,9 +1,14 @@
 import argparse
 import pandas as pd
+import pickle
 
-from band_gap_ml.models import load_model
 from band_gap_ml.vectorizer import FormulaVectorizer
 from band_gap_ml.config import Config
+
+
+def load_model(filepath):
+    with open(filepath, 'rb') as file:
+        return pickle.load(file)
 
 
 def load_models_and_scalers():
