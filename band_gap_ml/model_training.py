@@ -1,140 +1,311 @@
 """
-Module model_training.py
+Module model_training.py - Module for training and saving classification and regression models.
+This module loads data, trains models, and saves them to disk.
 """
+import json
 import os
 import pickle
 import argparse
+import importlib
 
 import pandas as pd
+import numpy as np
 from sklearn import preprocessing, metrics
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
 
 from band_gap_ml.config import Config
 
+def get_model_class(model_type, task):
+    """Get the model class and import the corresponding module based on the given model type and task."""
+    module_path, class_name = Config.MODEL_TYPES.get(model_type).get(task).rsplit('.', maxsplit=1)
+    print(f"Importing {class_name} from {module_path}")
+    module = importlib.import_module(module_path)
+    return getattr(module, class_name)
 
 def train_and_save_models(
         classification_data_path=None,
         regression_data_path=None,
-        classification_model_path=None,
-        scaler_classification_path=None,
-        regression_model_path=None,
-        scaler_regression_path=None,
+        model_type='RandomForest',
+        classification_params=None,
+        regression_params=None
 ):
-    """
-    Train and save classification and regression models using RandomForestClassifier and RandomForestRegressor, respectively.
-
-    Args:
-        classification_data_path (str, optional): Path to the CSV file with classification data. Defaults to Config.CLASSIFICATION_DATA_PATH.
-        regression_data_path (str, optional): Path to the CSV file with regression data. Defaults to Config.REGRESSION_DATA_PATH.
-        classification_model_path (str, optional): Path to save the classification model. Defaults to Config.CLASSIFICATION_MODEL_PATH.
-        scaler_classification_path (str, optional): Path to save the scaler for classification data. Defaults to Config.SCALER_CLASSIFICATION_PATH.
-        regression_model_path (str, optional): Path to save the regression model. Defaults to Config.REGRESSION_MODEL_PATH.
-        scaler_regression_path (str, optional): Path to save the scaler for regression data. Defaults to Config.SCALER_REGRESSION_PATH.
-
-    Returns:
-        None
-    """
+    print(f"Starting model training for {model_type}")
 
     # Use provided paths or default to Config paths
     classification_data_path = classification_data_path or Config.CLASSIFICATION_DATA_PATH
     regression_data_path = regression_data_path or Config.REGRESSION_DATA_PATH
-    classification_model_path = classification_model_path or Config.CLASSIFICATION_MODEL_PATH
-    scaler_classification_path = scaler_classification_path or Config.SCALER_CLASSIFICATION_PATH
-    regression_model_path = regression_model_path or Config.REGRESSION_MODEL_PATH
-    scaler_regression_path = scaler_regression_path or Config.SCALER_REGRESSION_PATH
+
+    model_paths = Config.get_model_paths(model_type)
 
     # Ensure models directory exists
-    os.makedirs(Config.MODELS_DIR, exist_ok=True)
+    model_dir = Config.MODELS_DIR / model_type.lower()
+    os.makedirs(model_dir, exist_ok=True)
+    print(f"Model directory created: {model_dir}")
 
-    # Classification
-    classification_data = pd.read_csv(classification_data_path)
-    classification_array = classification_data.values
-    X_classification = classification_array[:, 3:139]
-    Y_classification = classification_array[:, 2].astype('int')
+    metrics_file = model_dir / 'metrics.txt'
 
-    X_train_class, X_test_class, Y_train_class, Y_test_class = train_test_split(
-        X_classification, Y_classification, test_size=0.2, random_state=15, shuffle=True
-    )
+    with open(metrics_file, 'w') as f:
+        f.write(f"Metrics for {model_type} models\n\n")
 
-    scaler_class = preprocessing.StandardScaler().fit(X_train_class)
-    X_train_class = scaler_class.transform(X_train_class)
-    X_test_class = scaler_class.transform(X_test_class)
+        # Classification step
+        print("1. Starting classification training...")
+        classification_data = pd.read_csv(classification_data_path)
+        classification_array = classification_data.values
+        X_classification = classification_array[:, 3:139]
+        Y_classification = classification_array[:, 2].astype('int')
 
-    classifier_model = RandomForestClassifier(
-        n_estimators=70, max_features=28, n_jobs=-1, random_state=101
-    ).fit(X_train_class, Y_train_class)
-    Y_pred_class = classifier_model.predict(X_test_class)
+        X_train_class, X_test_class, Y_train_class, Y_test_class = train_test_split(
+            X_classification, Y_classification, test_size=0.2, random_state=15, shuffle=True
+        )
 
-    print("Random Forest Classification Accuracy:", classifier_model.score(X_test_class, Y_test_class))
-    print("Precision:", metrics.precision_score(Y_test_class, Y_pred_class))
-    print("Recall:", metrics.recall_score(Y_test_class, Y_pred_class))
-    print("F1 Score:", metrics.f1_score(Y_test_class, Y_pred_class))
+        scaler_class = preprocessing.StandardScaler().fit(X_train_class)
+        X_train_class = scaler_class.transform(X_train_class)
+        X_test_class = scaler_class.transform(X_test_class)
 
-    scaler_class = preprocessing.StandardScaler().fit(X_classification)
-    X_scaled_class = scaler_class.transform(X_classification)
-    final_classifier_model = RandomForestClassifier(
-        n_estimators=70, max_features=28, n_jobs=-1, random_state=101
-    ).fit(X_scaled_class, Y_classification)
+        ClassifierModel = get_model_class(model_type, 'classification')
 
-    with open(classification_model_path, 'wb') as file:
-        pickle.dump(final_classifier_model, file)
+        # Use default parameters if none are provided
+        classification_params = classification_params or Config.get_default_grid_params(model_type, 'classification')
+        print(f"Classification parameters: {classification_params}")
 
-    with open(scaler_classification_path, 'wb') as file:
-        pickle.dump(scaler_class, file)
+        # # Grid search for classification
+        # print("2. Starting grid search for classification...")
+        # grid_search_class = GridSearchCV(ClassifierModel(), classification_params, cv=5, n_jobs=-1, verbose=1)
+        # grid_search_class.fit(X_train_class, Y_train_class)
+        #
+        # best_classifier = grid_search_class.best_estimator_
+        # Y_pred_class = best_classifier.predict(X_test_class)
+        #
+        # accuracy = best_classifier.score(X_test_class, Y_test_class)
+        # precision = metrics.precision_score(Y_test_class, Y_pred_class)
+        # recall = metrics.recall_score(Y_test_class, Y_pred_class)
+        # f1 = metrics.f1_score(Y_test_class, Y_pred_class)
+        #
+        # f.write("Classification Metrics:\n")
+        # f.write(f"Best Parameters: {grid_search_class.best_params_}\n")
+        # f.write(f"Accuracy: {accuracy:.4f}\n")
+        # f.write(f"Precision: {precision:.4f}\n")
+        # f.write(f"Recall: {recall:.4f}\n")
+        # f.write(f"F1 Score: {f1:.4f}\n\n")
+        #
+        # print(f"{model_type} Classification Best Parameters:", grid_search_class.best_params_)
+        # print(f"Accuracy:", accuracy)
+        # print("Precision:", precision)
+        # print("Recall:", recall)
+        # print("F1 Score:", f1)
+        print("2. Starting randomized search for classification...")
+        n_iter = 20  # Number of parameter settings that are sampled. Adjust this based on your needs and time constraints.
+        cv = 5  # Keep the original number of cross-validation folds
 
-    # Regression
-    regression_data = pd.read_csv(regression_data_path)
-    regression_array = regression_data.values
-    X_regression = regression_array[:, 2:138]
-    Y_regression = regression_array[:, 1]
+        random_search_class = RandomizedSearchCV(
+            ClassifierModel(),
+            classification_params,
+            n_iter=n_iter,
+            cv=cv,
+            n_jobs=-1,
+            verbose=2,  # Increased verbosity to see more details
+            random_state=42
+        )
+        random_search_class.fit(X_train_class, Y_train_class)
 
-    X_train_reg, X_test_reg, Y_train_reg, Y_test_reg = train_test_split(
-        X_regression, Y_regression, test_size=0.2, random_state=101, shuffle=True
-    )
+        best_classifier = random_search_class.best_estimator_
+        Y_pred_class = best_classifier.predict(X_test_class)
 
-    scaler_reg = preprocessing.StandardScaler().fit(X_train_reg)
-    X_train_reg = scaler_reg.transform(X_train_reg)
-    X_test_reg = scaler_reg.transform(X_test_reg)
+        accuracy = best_classifier.score(X_test_class, Y_test_class)
+        precision = metrics.precision_score(Y_test_class, Y_pred_class)
+        recall = metrics.recall_score(Y_test_class, Y_pred_class)
+        f1 = metrics.f1_score(Y_test_class, Y_pred_class)
 
-    regressor_model = RandomForestRegressor(n_estimators=200, n_jobs=-1, random_state=101).fit(X_train_reg, Y_train_reg)
-    Y_pred_reg = regressor_model.predict(X_test_reg)
+        f.write("Classification Metrics:\n")
+        f.write(f"Best Parameters: {random_search_class.best_params_}\n")
+        f.write(f"Accuracy: {accuracy:.4f}\n")
+        f.write(f"Precision: {precision:.4f}\n")
+        f.write(f"Recall: {recall:.4f}\n")
+        f.write(f"F1 Score: {f1:.4f}\n\n")
 
-    print("\nRandom Forest Regression Accuracy:", regressor_model.score(X_test_reg, Y_test_reg))
-    print('MAE:', metrics.mean_absolute_error(Y_test_reg, Y_pred_reg))
-    print('MSE:', metrics.mean_squared_error(Y_test_reg, Y_pred_reg))
-    print('RMSE:', metrics.mean_squared_error(Y_test_reg, Y_pred_reg, squared=False))
-    print('Explained Variance Score:', metrics.explained_variance_score(Y_test_reg, Y_pred_reg))
-    print('Mean Squared Log Error:', metrics.mean_squared_log_error(Y_test_reg, Y_pred_reg))
-    print('Median Absolute Error:', metrics.median_absolute_error(Y_test_reg, Y_pred_reg))
+        print(f"{model_type} Classification Best Parameters:", random_search_class.best_params_)
+        print(f"Accuracy:", accuracy)
+        print("Precision:", precision)
+        print("Recall:", recall)
+        print("F1 Score:", f1)
 
-    scaler_reg = preprocessing.StandardScaler().fit(X_regression)
-    X_scaled_reg = scaler_reg.transform(X_regression)
-    final_regression_model = RandomForestRegressor(n_estimators=200, n_jobs=-1, random_state=101).fit(X_scaled_reg, Y_regression)
+        # Train final classification model on entire dataset
+        print("3. Training final classification model on entire dataset...")
+        scaler_class = preprocessing.StandardScaler().fit(X_classification)
+        X_scaled_class = scaler_class.transform(X_classification)
+        final_classifier_model = ClassifierModel(**random_search_class.best_params_)
+        final_classifier_model.fit(X_scaled_class, Y_classification)
 
-    with open(regression_model_path, 'wb') as file:
-        pickle.dump(final_regression_model, file)
+        print(f"Saving classification model to {model_paths['classification_model']}")
+        with open(model_paths['classification_model'], 'wb') as file:
+            pickle.dump(final_classifier_model, file)
 
-    with open(scaler_regression_path, 'wb') as file:
-        pickle.dump(scaler_reg, file)
+        print(f"Saving classification scaler to {model_paths['classification_scaler']}")
+        with open(model_paths['classification_scaler'], 'wb') as file:
+            pickle.dump(scaler_class, file)
 
+        # Regression
+        # Regression
+        print("\n4. Starting regression training")
+        regression_data = pd.read_csv(regression_data_path)
+        regression_array = regression_data.values
+        X_regression = regression_array[:, 2:138]
+        Y_regression = regression_array[:, 1]
+
+        X_train_reg, X_test_reg, Y_train_reg, Y_test_reg = train_test_split(
+            X_regression, Y_regression, test_size=0.2, random_state=101, shuffle=True
+        )
+
+        scaler_reg = preprocessing.StandardScaler().fit(X_train_reg)
+        X_train_reg = scaler_reg.transform(X_train_reg)
+        X_test_reg = scaler_reg.transform(X_test_reg)
+
+        RegressorModel = get_model_class(model_type, 'regression')
+
+        # Use default parameters if none are provided
+        regression_params = regression_params or Config.get_default_grid_params(model_type, 'regression')
+        print(f"Regression parameters: {regression_params}")
+
+        print("5. Starting randomized search for regression")
+        n_iter_reg = 50  # Number of parameter settings that are sampled. Adjust this based on your needs and time constraints.
+        cv_reg = 5  # Keep the original number of cross-validation folds
+
+        random_search_reg = RandomizedSearchCV(
+            RegressorModel(),
+            regression_params,
+            n_iter=n_iter_reg,
+            cv=cv_reg,
+            n_jobs=-1,
+            verbose=2,  # Increased verbosity to see more details
+            random_state=42
+        )
+        random_search_reg.fit(X_train_reg, Y_train_reg)
+
+        best_regressor = random_search_reg.best_estimator_
+        Y_pred_reg = best_regressor.predict(X_test_reg)
+
+        r2 = best_regressor.score(X_test_reg, Y_test_reg)
+        mae = metrics.mean_absolute_error(Y_test_reg, Y_pred_reg)
+        mse = metrics.mean_squared_error(Y_test_reg, Y_pred_reg)
+        rmse = np.sqrt(mse)
+        evs = metrics.explained_variance_score(Y_test_reg, Y_pred_reg)
+
+        f.write("Regression Metrics:\n")
+        f.write(f"Best Parameters: {random_search_reg.best_params_}\n")
+        f.write(f"R2 Score: {r2:.4f}\n")
+        f.write(f"MAE: {mae:.4f}\n")
+        f.write(f"MSE: {mse:.4f}\n")
+        f.write(f"RMSE: {rmse:.4f}\n")
+        f.write(f"Explained Variance Score: {evs:.4f}\n")
+
+        print(f"\n{model_type} Regression Best Parameters:", random_search_reg.best_params_)
+        print("R2 Score:", r2)
+        print('MAE:', mae)
+        print('MSE:', mse)
+        print('RMSE:', rmse)
+        print('Explained Variance Score:', evs)
+
+        # Train final regression model on entire dataset
+        print("6. Training final regression model on entire dataset")
+        scaler_reg = preprocessing.StandardScaler().fit(X_regression)
+        X_scaled_reg = scaler_reg.transform(X_regression)
+        final_regression_model = RegressorModel(**random_search_reg.best_params_)
+        final_regression_model.fit(X_scaled_reg, Y_regression)
+
+        print(f"Saving regression model to {model_paths['regression_model']}")
+        with open(model_paths['regression_model'], 'wb') as file:
+            pickle.dump(final_regression_model, file)
+
+        print(f"Saving regression scaler to {model_paths['regression_scaler']}")
+        with open(model_paths['regression_scaler'], 'wb') as file:
+            pickle.dump(scaler_reg, file)
+
+        # print("\n4. Starting regression training")
+        # regression_data = pd.read_csv(regression_data_path)
+        # regression_array = regression_data.values
+        # X_regression = regression_array[:, 2:138]
+        # Y_regression = regression_array[:, 1]
+        #
+        # X_train_reg, X_test_reg, Y_train_reg, Y_test_reg = train_test_split(
+        #     X_regression, Y_regression, test_size=0.2, random_state=101, shuffle=True
+        # )
+        #
+        # scaler_reg = preprocessing.StandardScaler().fit(X_train_reg)
+        # X_train_reg = scaler_reg.transform(X_train_reg)
+        # X_test_reg = scaler_reg.transform(X_test_reg)
+        #
+        # RegressorModel = get_model_class(model_type, 'regression')
+        #
+        # # Grid search for regression
+        # regression_params = regression_params or Config.get_default_grid_params(model_type, 'regression')
+        # print(f"Regression parameters: {regression_params}")
+
+
+        # print("5. Starting grid search for regression")
+        # grid_search_reg = GridSearchCV(RegressorModel(), regression_params, cv=5, n_jobs=-1, verbose=1)
+        # grid_search_reg.fit(X_train_reg, Y_train_reg)
+        #
+        # best_regressor = grid_search_reg.best_estimator_
+        # Y_pred_reg = best_regressor.predict(X_test_reg)
+        #
+        # r2 = best_regressor.score(X_test_reg, Y_test_reg)
+        # mae = metrics.mean_absolute_error(Y_test_reg, Y_pred_reg)
+        # mse = metrics.mean_squared_error(Y_test_reg, Y_pred_reg)
+        # rmse = np.sqrt(mse)
+        # evs = metrics.explained_variance_score(Y_test_reg, Y_pred_reg)
+        #
+        # f.write("Regression Metrics:\n")
+        # f.write(f"Best Parameters: {grid_search_reg.best_params_}\n")
+        # f.write(f"R2 Score: {r2:.4f}\n")
+        # f.write(f"MAE: {mae:.4f}\n")
+        # f.write(f"MSE: {mse:.4f}\n")
+        # f.write(f"RMSE: {rmse:.4f}\n")
+        # f.write(f"Explained Variance Score: {evs:.4f}\n")
+        #
+        # print(f"\n{model_type} Regression Best Parameters:", grid_search_reg.best_params_)
+        # print("R2 Score:", r2)
+        # print('MAE:', mae)
+        # print('MSE:', mse)
+        # print('RMSE:', rmse)
+        # print('Explained Variance Score:', evs)
+        #
+        # # Train final regression model on entire dataset
+        # print("5. Training final regression model on entire dataset")
+        # scaler_reg = preprocessing.StandardScaler().fit(X_regression)
+        # X_scaled_reg = scaler_reg.transform(X_regression)
+        # final_regression_model = RegressorModel(**grid_search_reg.best_params_)
+        # final_regression_model.fit(X_scaled_reg, Y_regression)
+        #
+        # print(f"Saving regression model to {model_paths['regression_model']}")
+        # with open(model_paths['regression_model'], 'wb') as file:
+        #     pickle.dump(final_regression_model, file)
+        #
+        # print(f"Saving regression scaler to {model_paths['regression_scaler']}")
+        # with open(model_paths['regression_scaler'], 'wb') as file:
+        #     pickle.dump(scaler_reg, file)
+
+    print("Model training completed successfully")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train and save models for classification and regression.")
     parser.add_argument("--classification_data", type=str, help="Path to the classification dataset")
     parser.add_argument("--regression_data", type=str, help="Path to the regression dataset")
-    parser.add_argument("--classification_model", type=str, help="Path to save the classification model")
-    parser.add_argument("--scaler_classification", type=str, help="Path to save the classification scaler")
-    parser.add_argument("--regression_model", type=str, help="Path to save the regression model")
-    parser.add_argument("--scaler_regression", type=str, help="Path to save the regression scaler")
+    parser.add_argument("--model_type", type=str, default="RandomForest", help="Type of model to use")
+    parser.add_argument("--classification_params", type=str, help="JSON string of classification model parameters for grid search")
+    parser.add_argument("--regression_params", type=str, help="JSON string of regression model parameters for grid search")
 
     args = parser.parse_args()
+
+    print("Parsed arguments:", args)
+
+    # Parse JSON strings to dictionaries if provided
+    classification_params = json.loads(args.classification_params) if args.classification_params else None
+    regression_params = json.loads(args.regression_params) if args.regression_params else None
 
     train_and_save_models(
         classification_data_path=args.classification_data,
         regression_data_path=args.regression_data,
-        classification_model_path=args.classification_model,
-        scaler_classification_path=args.scaler_classification,
-        regression_model_path=args.regression_model,
-        scaler_regression_path=args.scaler_regression,
+        model_type=args.model_type,
+        classification_params=classification_params,
+        regression_params=regression_params,
     )

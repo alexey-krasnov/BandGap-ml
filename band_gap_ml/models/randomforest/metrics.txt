@@ -1,0 +1,16 @@
+Metrics for RandomForest models
+
+Classification Metrics:
+Best Parameters: {'n_estimators': 100, 'min_samples_split': 2, 'min_samples_leaf': 1, 'max_depth': 20}
+Accuracy: 0.9045
+Precision: 0.8948
+Recall: 0.9167
+F1 Score: 0.9056
+
+Regression Metrics:
+Best Parameters: {'n_estimators': 200, 'min_samples_split': 2, 'min_samples_leaf': 1, 'max_depth': 20}
+R2 Score: 0.9070
+MAE: 0.2945
+MSE: 0.2218
+RMSE: 0.4709
+Explained Variance Score: 0.9070
