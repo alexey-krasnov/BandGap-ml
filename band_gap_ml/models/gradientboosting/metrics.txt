@@ -1,2 +1,16 @@
 Metrics for GradientBoosting models
 
+Classification Metrics:
+Best Parameters: Default parameters
+Accuracy: 0.8902
+Precision: 0.8721
+Recall: 0.9146
+F1 Score: 0.8929
+
+Regression Metrics:
+Best Parameters: Default parameters
+R2 Score: 0.8656
+MAE: 0.4090
+MSE: 0.3203
+RMSE: 0.5659
+Explained Variance Score: 0.8657

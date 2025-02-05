@@ -107,7 +107,7 @@ class Config:
     @staticmethod
     def get_model_paths(model_type):
         models_names = ModelsNames(
-            model=f'{model_type.lower()}_model.pkl',
+            model=f'{model_type.lower()}.pkl',
             scaler=f'{model_type.lower()}_scaler.pkl'
         )
         model_dir = Config.MODELS_DIR / model_type.lower()
@@ -128,3 +128,4 @@ class Config:
         :return: dict, default grid search parameters
         """
         return Config.DEFAULT_GRID_PARAMS.get(model_type, {}).get(task, {})
+
