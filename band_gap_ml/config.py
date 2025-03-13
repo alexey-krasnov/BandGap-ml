@@ -104,13 +104,13 @@ class Config:
         return model_dir
 
     @classmethod
-    def get_model_paths(cls, model_type, model_dir=None):
+    def get_model_paths(cls, model_type='best_model', model_dir=None):
         """
         Get paths for model and scaler files.
 
         Parameters:
-            model_type (str): Type of model (e.g., 'RandomForest', 'GradientBoosting')
-            model_dir (Path or str, optional): Base directory for models. If None, uses Config.MODELS_DIR
+            model_type (str): Type of model (e.g., 'RandomForest', 'GradientBoosting'). Default is 'best_model' with RandomForest models.
+            model_dir (Path or str, optional): Base directory for models. If None, uses Config.MODELS_DIR.
 
         Returns:
             dict: Dictionary with paths to model and scaler files
@@ -118,6 +118,7 @@ class Config:
         if not model_dir:
             model_dir = cls.MODELS_DIR / model_type.lower()
         else:
+            print(f"Model directory: {model_dir}")
             model_dir = Path(model_dir) / model_type.lower()
 
         # Ensure the directory exists
