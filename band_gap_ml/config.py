@@ -46,32 +46,16 @@ class Config:
     DEFAULT_GRID_PARAMS = {
         'RandomForest': {
             'classification': {
-                'n_estimators': [100, 200,
-                                 # 300
-                                 ],
-                'max_depth': [None, 10, 20,
-                              # 30
-                              ],
-                'min_samples_split': [2, 5,
-                                      # 10
-                                      ],
-                'min_samples_leaf': [1, 2,
-                                     # 4
-                                     ]
+                'n_estimators': [100, 200, 300, 400],
+                'max_depth': [None, 10, 20, 30, 40],
+                'min_samples_split': [2, 5, 10, 15],
+                'min_samples_leaf': [1, 2, 4, 6]
             },
             'regression': {
-                'n_estimators': [100, 200,
-                                 # 300
-                                 ],
-                'max_depth': [None, 10, 20,
-                              # 30
-                              ],
-                'min_samples_split': [2, 5,
-                                      # 10
-                                      ],
-                'min_samples_leaf': [1, 2,
-                                     # 4
-                                     ]
+                'n_estimators': [100, 200, 300, 400],
+                'max_depth': [None, 10, 20, 30, 40],
+                'min_samples_split': [2, 5, 10, 15],
+                'min_samples_leaf': [1, 2, 4, 6]
             }
         },
         'GradientBoosting': {
