@@ -100,14 +100,14 @@ def load_input_data(file_path):
     return input_data
 
 
-def predict_eg_from_file(file_path=None, input_data=None, model_type='RandomForest', model_dir=None):
+def predict_eg_from_file(file_path=None, input_data=None, model_type='best_model', model_dir=None):
     """
     Predict band gaps from an input file containing chemical formulas.
 
     Parameters:
         file_path (str): Path to the input file. Default is None
         input_data (pd.DataFrame, optional): Input data with 'Composition' column. Defaults to None.
-        model_type (str): Type of model to use for prediction. Default is 'RandomForest'.
+        model_type (str): Type of model to use for prediction. Default is 'best_model' with RandomForest models.
 
     Returns:
         list: Predicted band gaps.
@@ -126,13 +126,13 @@ def predict_eg_from_file(file_path=None, input_data=None, model_type='RandomFore
     return predict_band_gap(X, classifier_model, regressor_model, scaler_class, scaler_reg)
 
 
-def predict_eg_from_formula(formula, model_type='RandomForest', model_dir=None):
+def predict_eg_from_formula(formula, model_type='best_model', model_dir=None):
     """
     Predict band gap from a single chemical formula input.
 
     Parameters:
         formula (str or list): Chemical formula as a string or list of strings.
-        model_type (str): Type of model to use for prediction. Default is 'RandomForest'.
+        model_type (str): Type of model to use for prediction. Default is 'best_model' with RandomForest models.
 
     Returns:
         float or int: Predicted band gap value.

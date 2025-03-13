@@ -1,0 +1,33 @@
+{
+    "model_type": "GradientBoosting",
+    "use_grid_search": true,
+    "classification": {
+        "best_params": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "min_samples_split": 10,
+            "n_estimators": 200
+        },
+        "metrics": {
+            "accuracy": 0.9034552845528455,
+            "precision": 0.8915187376725838,
+            "recall": 0.9186991869918699,
+            "f1_score": 0.9049049049049049
+        }
+    },
+    "regression": {
+        "best_params": {
+            "learning_rate": 0.1,
+            "max_depth": 5,
+            "min_samples_split": 5,
+            "n_estimators": 300
+        },
+        "metrics": {
+            "r2_score": 0.9109856475172049,
+            "mae": 0.2820581509779777,
+            "mse": 0.2121435937040346,
+            "rmse": 0.46059048373151895,
+            "explained_variance_score": 0.9109872010350587
+        }
+    }
+}
