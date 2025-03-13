@@ -3,24 +3,25 @@ Module model_training.py - Module for training and saving classification and reg
 This module loads data, trains models, and saves them to disk.
 """
 import json
-import os
 import pickle
 import argparse
 import importlib
-from datetime import datetime
 
 import pandas as pd
 import numpy as np
 from sklearn import preprocessing, metrics
-from sklearn.model_selection import train_test_split, RandomizedSearchCV,  GridSearchCV
+from sklearn.model_selection import train_test_split, GridSearchCV
 
 from band_gap_ml.config import Config
+
+
 def get_model_class(model_type, task):
     """Get the model class and import the corresponding module based on the given model type and task."""
     module_path, class_name = Config.MODEL_TYPES.get(model_type).get(task).rsplit('.', maxsplit=1)
     print(f"Importing {class_name} from {module_path}")
     module = importlib.import_module(module_path)
     return getattr(module, class_name)
+
 
 def train_and_save_models(
         classification_data_path=None,
@@ -32,25 +33,22 @@ def train_and_save_models(
 ):
     print(f"Starting model training for {model_type}")
 
-    # Use provided paths or default to Config paths
+    # 1. Use provided paths or default Config paths to the DATA files
     classification_data_path = classification_data_path or Config.CLASSIFICATION_DATA_PATH
     regression_data_path = regression_data_path or Config.REGRESSION_DATA_PATH
 
-    # model_paths = Config.get_model_paths(model_type)
-
-    # Create a unique folder with timestamp
-    timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
-    model_dir = Config.MODELS_DIR / f"{model_type.lower()}_{timestamp}"
-    os.makedirs(model_dir, exist_ok=True)
-    print(f"Model directory created: {model_dir}")
+    # Create a unique folder with timestamp for saving models and scalers
+    model_dir = Config.create_model_type_directory(model_type)
 
     models_statistics_file = model_dir / 'models_statistics.json'
 
+    classification_params = classification_params or Config.DEFAULT_GRID_PARAMS.get(model_type, {}).get('classification')
     # Classification step
     classification_results = train_classification_model(
         classification_data_path, model_type, use_grid_search, classification_params
     )
 
+    regression_params = regression_params or Config.DEFAULT_GRID_PARAMS.get(model_type, {}).get('regression')
     # Regression step
     regression_results = train_regression_model(
         regression_data_path, model_type, use_grid_search, regression_params
@@ -79,8 +77,9 @@ def train_and_save_models(
     print("Model training completed successfully")
     return models_statistics
 
+
 def train_classification_model(data_path, model_type, use_grid_search, params):
-    print("1. Starting classification training...")
+    print("1. Start training of classifier ...")
     classification_data = pd.read_csv(data_path)
     X_classification = classification_data.iloc[:, 3:139].values
     Y_classification = classification_data.iloc[:, 2].astype('int').values
@@ -120,8 +119,9 @@ def train_classification_model(data_path, model_type, use_grid_search, params):
         "scaler": scaler
     }
 
+
 def train_regression_model(data_path, model_type, use_grid_search, params):
-    print("\n4. Starting regression training")
+    print("\n4. Start training regressor...")
     regression_data = pd.read_csv(data_path)
     X_regression = regression_data.iloc[:, 2:138].values
     Y_regression = regression_data.iloc[:, 1].values
@@ -160,20 +160,6 @@ def train_regression_model(data_path, model_type, use_grid_search, params):
         "scaler": scaler
     }
 
-# def perform_random_grid_search(Model, X, y, params, task):
-#     print(f"Starting randomized search for {task}...")
-#     n_iter = {'classification': 20, 'regression': 20}
-#     cv = 5
-#     params = params or Config.get_default_grid_params(Model.__name__, task)
-#     random_search = RandomizedSearchCV(
-#         Model(), params, n_iter=n_iter.get(task), cv=cv, n_jobs=-1, verbose=2, random_state=42
-#     )
-#     random_search.fit(X, y)
-#     print(f"Best score: {random_search.best_score_}")
-#     print(f"Best parameters: {random_search.best_params_}")
-#     return random_search.best_estimator_, random_search.best_params_
-
-
 def perform_grid_search(Model, X, y, params, task):
     print(f"Starting grid search for {task}...")
     cv = 5
@@ -186,6 +172,7 @@ def perform_grid_search(Model, X, y, params, task):
     print(f"Best parameters: {grid_search.best_params_}")
     return grid_search.best_estimator_, grid_search.best_params_
 
+
 def calculate_classification_metrics(y_true, y_pred):
     return {
         "accuracy": metrics.accuracy_score(y_true, y_pred),
@@ -193,6 +180,7 @@ def calculate_classification_metrics(y_true, y_pred):
         "recall": metrics.recall_score(y_true, y_pred),
         "f1_score": metrics.f1_score(y_true, y_pred)
     }
+
 
 def calculate_regression_metrics(y_true, y_pred):
     mse = metrics.mean_squared_error(y_true, y_pred)
@@ -204,15 +192,18 @@ def calculate_regression_metrics(y_true, y_pred):
         "explained_variance_score": metrics.explained_variance_score(y_true, y_pred)
     }
 
+
 def print_classification_metrics(model_type, best_params, metrics_dict):
     print(f"{model_type} Classification Best Parameters: {best_params}\n")
     for metric, value in metrics_dict.items():
         print(f"{metric.capitalize()}: {value}")
 
+
 def print_regression_metrics(model_type, best_params, metrics_dict):
     print(f"\n{model_type} Regression Best Parameters: {best_params}\n")
     for metric, value in metrics_dict.items():
         print(f"{metric.upper()}: {value}")
+
 
 def save_models_and_scalers(model_dir, classification_results, regression_results):
     for task in ['classification', 'regression']:
@@ -223,6 +214,7 @@ def save_models_and_scalers(model_dir, classification_results, regression_result
             print(f"Saving {task} {item} to {path}")
             with open(path, 'wb') as file:
                 pickle.dump(obj, file)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train and save models for classification and regression.")

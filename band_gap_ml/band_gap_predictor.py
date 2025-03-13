@@ -6,9 +6,11 @@ import pickle
 from band_gap_ml.vectorizer import FormulaVectorizer
 from band_gap_ml.config import Config
 
+
 def load_model(filepath):
     with open(filepath, 'rb') as file:
         return pickle.load(file)
+
 
 def load_models_and_scalers(model_type='RandomForest'):
     """Load models and scalers from pre-saved paths."""
@@ -18,6 +20,7 @@ def load_models_and_scalers(model_type='RandomForest'):
     scaler_class = load_model(model_paths['classification_scaler'])
     scaler_reg = load_model(model_paths['regression_scaler'])
     return classifier_model, regressor_model, scaler_class, scaler_reg
+
 
 def prepare_features(input_data):
     """
@@ -38,6 +41,7 @@ def prepare_features(input_data):
 
     X = pd.DataFrame(features, columns=vectorizer.column_names)
     return X
+
 
 def predict_band_gap(input_data, classifier_model, regressor_model, scaler_class, scaler_reg):
     """
@@ -66,6 +70,7 @@ def predict_band_gap(input_data, classifier_model, regressor_model, scaler_class
 
     return final_result
 
+
 def load_input_data(file_path):
     """
     Load input data from a file (CSV or Excel).
@@ -84,6 +89,7 @@ def load_input_data(file_path):
         raise ValueError("Unsupported file format. Please provide a CSV or Excel file.")
 
     return input_data
+
 
 def predict_eg_from_file(file_path=None, input_data=None, model_type='RandomForest'):
     """
@@ -110,6 +116,7 @@ def predict_eg_from_file(file_path=None, input_data=None, model_type='RandomFore
 
     return predict_band_gap(X, classifier_model, regressor_model, scaler_class, scaler_reg)
 
+
 def predict_eg_from_formula(formula, model_type='RandomForest'):
     """
     Predict band gap from a single chemical formula input.
@@ -133,6 +140,7 @@ def predict_eg_from_formula(formula, model_type='RandomForest'):
     classifier_model, regressor_model, scaler_class, scaler_reg = load_models_and_scalers(model_type)
 
     return predict_band_gap(X, classifier_model, regressor_model, scaler_class, scaler_reg)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Predict Band Gap from Chemical Formula or File')

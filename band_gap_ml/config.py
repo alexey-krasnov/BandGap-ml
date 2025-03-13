@@ -1,5 +1,6 @@
 """Config module for managing paths and settings for the project.
 """
+from datetime import datetime
 from typing import NamedTuple
 from pathlib import Path
 
@@ -46,16 +47,16 @@ class Config:
     DEFAULT_GRID_PARAMS = {
         'RandomForest': {
             'classification': {
-                'n_estimators': [100, 200, 300, 400],
-                'max_depth': [None, 10, 20, 30, 40],
-                'min_samples_split': [2, 5, 10, 15],
-                'min_samples_leaf': [1, 2, 4, 6]
+                'n_estimators': [100, 200, 300],
+                'max_depth': [10, 20, 30, 40],
+                'min_samples_split': [2, 5, 10],
+                'min_samples_leaf': [1, 2, 4]
             },
             'regression': {
-                'n_estimators': [100, 200, 300, 400],
-                'max_depth': [None, 10, 20, 30, 40],
-                'min_samples_split': [2, 5, 10, 15],
-                'min_samples_leaf': [1, 2, 4, 6]
+                'n_estimators': [100, 200, 300],
+                'max_depth': [10, 20, 30, 40],
+                'min_samples_split': [2, 5, 10],
+                'min_samples_leaf': [1, 2, 4]
             }
         },
         'GradientBoosting': {
@@ -87,6 +88,17 @@ class Config:
             }
         }
     }
+
+    @staticmethod
+    def create_model_type_directory(model_type):
+        # Create a unique folder with timestamp
+        # timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+        # model_dir =  Config.MODELS_DIR / f"{model_type.lower()}_{timestamp}"
+        model_dir =  Config.MODELS_DIR / f"{model_type.lower()}"
+        Path.mkdir(model_dir, exist_ok=True)
+        print(f"Model directory created: {model_dir}")
+        return model_dir
+
 
     @staticmethod
     def get_model_paths(model_type):
