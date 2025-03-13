@@ -100,7 +100,7 @@ class Config:
             model_dir = Path(model_dir) / model_type.lower()
 
         # Create directory if it doesn't exist
-        model_dir.mkdir(parents=True, exist_ok=True)
+        Path(model_dir).mkdir(parents=True, exist_ok=True)
         print(f"Model directory created: {model_dir}")
         return model_dir
 
@@ -121,9 +121,6 @@ class Config:
         else:
             print(f"Model directory: {model_dir}")
             model_dir = Path(model_dir) / model_type.lower()
-
-        # Ensure the directory exists
-        os.makedirs(model_dir, exist_ok=True)
 
         return {
             'classification_model': model_dir / f'classification_model.pkl',
