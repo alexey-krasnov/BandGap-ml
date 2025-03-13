@@ -21,17 +21,17 @@ Try out new Frontend Web Interface: https://bandgap-ml.streamlit.app/
 ## Prepare Python Workspace Environment with Conda
 ```bash
 # 1. Create and activate the conda environment
-conda create --name bandgap-ml "python<3.12"
+conda create --name bandgap-ml "python<3.13"
 conda activate bandgap-ml
 
 # 2. Install BandGap-ml
 # 2.1 From PyPI
-TODO: upload
+pip install BandGap-ml
 
-# 2.2 Or install from the GitHub repository
+# 2.2 Or install the latest version from the GitHub repository
 pip install git+https://github.com/alexey-krasnov/BandGap-ml.git
 
-# 2.3 Or install in editable mode from the GitHub repository
+# 2.3 Or install the latest version in editable mode from the GitHub repository
 git clone https://github.com/alexey-krasnov/BandGap-ml.git
 cd BandGap-ml
 pip install -e .

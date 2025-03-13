@@ -25,13 +25,16 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10x",
+        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
     ],
 
     url="https://github.com/alexey-krasnov/Band_Gap_ML",
-    packages=find_packages(exclude=["tests", "tests.*", "Benchmark"]),
+    packages=find_packages(exclude=["tests", "tests.*", "Benchmark"]) + [
+        'band_gap_ml.data',
+        'band_gap_ml.models'
+    ],
     include_package_data=True,  # Ensure package data is included
     package_data={
         'band_gap_ml': [
