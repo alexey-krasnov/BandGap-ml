@@ -6,6 +6,7 @@ import json
 import pickle
 import argparse
 import importlib
+from pathlib import Path
 
 import pandas as pd
 import numpy as np
@@ -27,6 +28,7 @@ def train_and_save_models(
         classification_data_path=None,
         regression_data_path=None,
         model_type='RandomForest',
+        model_dir=None,
         classification_params=None,
         regression_params=None,
         use_grid_search=False
@@ -37,8 +39,11 @@ def train_and_save_models(
     classification_data_path = classification_data_path or Config.CLASSIFICATION_DATA_PATH
     regression_data_path = regression_data_path or Config.REGRESSION_DATA_PATH
 
+    if model_dir:
+        model_dir = Path(model_dir)
+
     # Create a unique folder with timestamp for saving models and scalers
-    model_dir = Config.create_model_type_directory(model_type)
+    model_dir = Config.create_model_type_directory(model_type, model_dir)
 
     models_statistics_file = model_dir / 'models_statistics.json'
 
@@ -221,6 +226,7 @@ if __name__ == "__main__":
     parser.add_argument("--classification_data", type=str, help="Path to the classification dataset")
     parser.add_argument("--regression_data", type=str, help="Path to the regression dataset")
     parser.add_argument("--model_type", type=str, default="RandomForest", help="Type of model to use")
+    parser.add_argument("--model_dir", type=str, default="models", help="Directory to save models and scalers")
     parser.add_argument("--classification_params", type=str, help="JSON string of classification model parameters for grid search")
     parser.add_argument("--regression_params", type=str, help="JSON string of regression model parameters for grid search")
     parser.add_argument("--use_grid_search", type=bool, default=True, help="Whether to use grid search or not")
@@ -237,6 +243,7 @@ if __name__ == "__main__":
         classification_data_path=args.classification_data,
         regression_data_path=args.regression_data,
         model_type=args.model_type,
+        model_dir=args.model_dir,
         classification_params=classification_params,
         regression_params=regression_params,
         use_grid_search=args.use_grid_search

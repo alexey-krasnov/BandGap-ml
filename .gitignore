@@ -13,3 +13,4 @@ __pycache__/
 *.DS_Store
 /comparison
 *.ipynb_checkpoints*
+notebooks/band_gap_prediction_public.ipynb

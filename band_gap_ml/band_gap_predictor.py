@@ -12,9 +12,18 @@ def load_model(filepath):
         return pickle.load(file)
 
 
-def load_models_and_scalers(model_type='RandomForest'):
-    """Load models and scalers from pre-saved paths."""
-    model_paths = Config.get_model_paths(model_type)
+def load_models_and_scalers(model_type, model_dir=None):
+    """
+    Load trained models and scalers for classification and regression.
+
+    Parameters:
+        model_type (str): Type of model to load (e.g., 'RandomForest', 'GradientBoosting', 'XGBoost')
+        model_dir (Path or str, optional): Directory where models are stored. If None, uses default Config.MODELS_DIR
+
+    Returns:
+        tuple: (classifier_model, regressor_model, classification_scaler, regression_scaler)
+    """
+    model_paths = Config.get_model_paths(model_type, model_dir)
     classifier_model = load_model(model_paths['classification_model'])
     regressor_model = load_model(model_paths['regression_model'])
     scaler_class = load_model(model_paths['classification_scaler'])
@@ -91,7 +100,7 @@ def load_input_data(file_path):
     return input_data
 
 
-def predict_eg_from_file(file_path=None, input_data=None, model_type='RandomForest'):
+def predict_eg_from_file(file_path=None, input_data=None, model_type='RandomForest', model_dir=None):
     """
     Predict band gaps from an input file containing chemical formulas.
 
@@ -112,12 +121,12 @@ def predict_eg_from_file(file_path=None, input_data=None, model_type='RandomFore
 
     X = prepare_features(input_data)
 
-    classifier_model, regressor_model, scaler_class, scaler_reg = load_models_and_scalers(model_type)
+    classifier_model, regressor_model, scaler_class, scaler_reg = load_models_and_scalers(model_type, model_dir)
 
     return predict_band_gap(X, classifier_model, regressor_model, scaler_class, scaler_reg)
 
 
-def predict_eg_from_formula(formula, model_type='RandomForest'):
+def predict_eg_from_formula(formula, model_type='RandomForest', model_dir=None):
     """
     Predict band gap from a single chemical formula input.
 
@@ -137,7 +146,7 @@ def predict_eg_from_formula(formula, model_type='RandomForest'):
 
     X = prepare_features(input_data)
 
-    classifier_model, regressor_model, scaler_class, scaler_reg = load_models_and_scalers(model_type)
+    classifier_model, regressor_model, scaler_class, scaler_reg = load_models_and_scalers(model_type, model_dir)
 
     return predict_band_gap(X, classifier_model, regressor_model, scaler_class, scaler_reg)
 
@@ -147,13 +156,14 @@ if __name__ == '__main__':
     parser.add_argument('--file', type=str, help='Path to input file (csv/excel) with chemical formulas')
     parser.add_argument('--formula', type=str, help='Single chemical formula for prediction')
     parser.add_argument('--model_type', type=str, default='RandomForest', help='Type of model to use for prediction: RandomForest, GradientBoosting, or XGBoost')
+    parser.add_argument("--model_dir", type=str, default="models", help="Directory where models and scalers are stored")
 
     args = parser.parse_args()
 
     if args.file:
-        predictions = predict_eg_from_file(args.file, model_type=args.model_type)
+        predictions = predict_eg_from_file(args.file, model_type=args.model_typem, model_dir=args.model_dir)
         print("Predictions from file:", predictions)
 
     if args.formula:
-        prediction = predict_eg_from_formula(args.formula, model_type=args.model_type)
+        prediction = predict_eg_from_formula(args.formula, model_type=args.model_type, model_dir=args.model_dir)
         print(f"Prediction for formula '{args.formula}':", prediction)

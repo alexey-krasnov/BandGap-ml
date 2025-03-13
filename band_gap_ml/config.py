@@ -1,17 +1,9 @@
 """Config module for managing paths and settings for the project.
 """
-from datetime import datetime
-from typing import NamedTuple
 from pathlib import Path
 
 # Get the absolute path of the current file's directory
 CURRENT_DIR = Path(__file__).resolve().parent
-
-
-class ModelsNames(NamedTuple):
-    """Class with model file names for classification and regression tasks."""
-    model: str
-    scaler: str
 
 
 class Config:
@@ -89,29 +81,53 @@ class Config:
         }
     }
 
-    @staticmethod
-    def create_model_type_directory(model_type):
-        # Create a unique folder with timestamp
-        # timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
-        # model_dir =  Config.MODELS_DIR / f"{model_type.lower()}_{timestamp}"
-        model_dir =  Config.MODELS_DIR / f"{model_type.lower()}"
-        Path.mkdir(model_dir, exist_ok=True)
+    @classmethod
+    def create_model_type_directory(cls, model_type, model_dir=None):
+        """
+        Create a directory for storing model files.
+
+        Parameters:
+            model_type (str): Type of model (e.g., 'RandomForest', 'GradientBoosting')
+            model_dir (Path or str, optional): Base directory for models. If None, uses Config.MODELS_DIR
+
+        Returns:
+            Path: Path to the created directory
+        """
+        if not model_dir:
+            model_dir = cls.MODELS_DIR / f"{model_type.lower()}"
+        else:
+            model_dir = Path(model_dir) / model_type.lower()
+
+        # Create directory if it doesn't exist
+        model_dir.mkdir(parents=True, exist_ok=True)
         print(f"Model directory created: {model_dir}")
         return model_dir
 
+    @classmethod
+    def get_model_paths(cls, model_type, model_dir=None):
+        """
+        Get paths for model and scaler files.
 
-    @staticmethod
-    def get_model_paths(model_type):
-        models_names = ModelsNames(
-            model=f'{model_type.lower()}.pkl',
-            scaler=f'{model_type.lower()}_scaler.pkl'
-        )
-        model_dir = Config.MODELS_DIR / model_type.lower()
+        Parameters:
+            model_type (str): Type of model (e.g., 'RandomForest', 'GradientBoosting')
+            model_dir (Path or str, optional): Base directory for models. If None, uses Config.MODELS_DIR
+
+        Returns:
+            dict: Dictionary with paths to model and scaler files
+        """
+        if not model_dir:
+            model_dir = cls.MODELS_DIR / model_type.lower()
+        else:
+            model_dir = Path(model_dir) / model_type.lower()
+
+        # Ensure the directory exists
+        model_dir.mkdir(parents=True, exist_ok=True)
+
         return {
-            'classification_model': model_dir / f'classification_{models_names.model}',
-            'regression_model': model_dir / f'regression_{models_names.model}',
-            'classification_scaler': model_dir / f'classification_{models_names.scaler}',
-            'regression_scaler': model_dir / f'regression_{models_names.scaler}'
+            'classification_model': model_dir / f'classification_model.pkl',
+            'regression_model': model_dir / f'regression_model.pkl',
+            'classification_scaler': model_dir / f'classification_scaler.pkl',
+            'regression_scaler': model_dir / f'regression_scaler.pkl'
         }
 
     @staticmethod
