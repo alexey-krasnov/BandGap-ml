@@ -1,6 +1,7 @@
 """Config module for managing paths and settings for the project.
 """
 from pathlib import Path
+import os
 
 # Get the absolute path of the current file's directory
 CURRENT_DIR = Path(__file__).resolve().parent
@@ -122,7 +123,7 @@ class Config:
             model_dir = Path(model_dir) / model_type.lower()
 
         # Ensure the directory exists
-        model_dir.mkdir(parents=True, exist_ok=True)
+        os.makedirs(model_dir, exist_ok=True)
 
         return {
             'classification_model': model_dir / f'classification_model.pkl',
@@ -141,4 +142,3 @@ class Config:
         :return: dict, default grid search parameters
         """
         return Config.DEFAULT_GRID_PARAMS.get(model_type, {}).get(task, {})
-
