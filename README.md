@@ -1,4 +1,4 @@
-# BandGap-ml v1.2
+# BandGap-ml v1.3
 
 [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://github.com/alexey-krasnov/BandGap-ml/graphs/commit-activity)
