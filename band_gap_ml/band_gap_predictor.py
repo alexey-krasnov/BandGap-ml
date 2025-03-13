@@ -146,7 +146,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Predict Band Gap from Chemical Formula or File')
     parser.add_argument('--file', type=str, help='Path to input file (csv/excel) with chemical formulas')
     parser.add_argument('--formula', type=str, help='Single chemical formula for prediction')
-    parser.add_argument('--model_type', type=str, default='RandomForest', help='Type of model to use for prediction')
+    parser.add_argument('--model_type', type=str, default='RandomForest', help='Type of model to use for prediction: RandomForest, GradientBoosting, or XGBoost')
 
     args = parser.parse_args()
 
