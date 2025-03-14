@@ -7,3 +7,4 @@ streamlit-navigation-bar
 streamlit_extras
 streamlit-toggle-switch
 pymatgen>=2024.10.3
+xgboost>=2.1.4
