@@ -1,7 +1,7 @@
 """Config module for managing paths and settings for the project.
 """
 from pathlib import Path
-import os
+from typing import Optional
 
 # Get the absolute path of the current file's directory
 CURRENT_DIR = Path(__file__).resolve().parent
@@ -105,13 +105,13 @@ class Config:
         return model_dir
 
     @classmethod
-    def get_model_paths(cls, model_type='best_model', model_dir=None):
+    def get_model_paths(cls, model_type='best_model', model_dir: Optional[str] = None):
         """
         Get paths for model and scaler files.
 
         Parameters:
-            model_type (str): Type of model (e.g., 'RandomForest', 'GradientBoosting'). Default is 'best_model' with RandomForest models.
-            model_dir (Path or str, optional): Base directory for models. If None, uses Config.MODELS_DIR.
+            model_type (str): Type of model to load (e.g., 'RandomForest', 'GradientBoosting', 'XGBoost').  Default is 'best_model' with RandomForest models.
+            model_dir (str, optional): Directory where models are stored. If None, uses default Config.MODELS_DIR.
 
         Returns:
             dict: Dictionary with paths to model and scaler files
