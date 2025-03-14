@@ -1,4 +1,4 @@
-# BandGap-ml v1.0
+# BandGap-ml v1.3
 
 [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://github.com/alexey-krasnov/BandGap-ml/graphs/commit-activity)
@@ -16,22 +16,37 @@
 ## Project Description
 Project for predicting band gaps of inorganic materials by using ML models.
 
-Try out new Frontend Web Interface: https://bandgap-ml.streamlit.app/
+## Try out new Frontend Web Interface running at:https://bandgap-ml.streamlit.app/
+
 
 ## Prepare Python Workspace Environment with Conda
+1. Download [Miniforge](https://github.com/conda-forge/miniforge) for Unix-like platforms (macOS & Linux)
 ```bash
-# 1. Create and activate the conda environment
-conda create --name bandgap-ml "python<3.12"
+# Download the installer using curl or wget or your favorite program:
+curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+
+# OR 
+wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+
+# Run the script:
+bash Miniforge3-$(uname)-$(uname -m).sh
+```
+and follow instructions. See the documentation for [Miniforge](https://github.com/conda-forge/miniforge) for more information.
+
+
+```bash
+# 2. Create and activate the conda environment
+conda create --name bandgap-ml "python<3.13"
 conda activate bandgap-ml
 
-# 2. Install BandGap-ml
-# 2.1 From PyPI
-TODO: upload
+# 3. Install BandGap-ml
+# 3.1 From PyPI
+pip install BandGap-ml
 
-# 2.2 Or install from the GitHub repository
+# 3.2 Or install the latest version from the GitHub repository
 pip install git+https://github.com/alexey-krasnov/BandGap-ml.git
 
-# 2.3 Or install in editable mode from the GitHub repository
+# 3.3 Or install the latest version in editable mode from the GitHub repository
 git clone https://github.com/alexey-krasnov/BandGap-ml.git
 cd BandGap-ml
 pip install -e .
@@ -81,9 +96,7 @@ print(predictions)
 ```
 
 ### 3. Use frontend web interface
-- Go to https://bandgap-ml.streamlit.app/ to check out the web interface 
-
-
+- Go to https://bandgap-ml.streamlit.app/ to check out the web interface
 - Or run web interface on your local machine. In CLI run the command:
 ```bash
 streamlit run frontend/band_gap_ml_app.py --server.address=0.0.0.0 --server.port=5005

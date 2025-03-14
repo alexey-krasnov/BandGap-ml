@@ -3,6 +3,7 @@ import pandas as pd
 from pymatgen.core.composition import Composition
 from band_gap_ml.config import Config
 
+
 class FormulaVectorizer:
     def __init__(self, elements_data_path=Config.ELEMENTS_PATH):
         self.elements_df = pd.read_csv(elements_data_path)
