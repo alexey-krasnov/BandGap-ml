@@ -2,7 +2,7 @@
 import argparse
 import pandas as pd
 import pickle
-
+from typing import Optional
 from band_gap_ml.vectorizer import FormulaVectorizer
 from band_gap_ml.config import Config
 
@@ -12,14 +12,13 @@ def load_model(filepath):
         return pickle.load(file)
 
 
-def load_models_and_scalers(model_type, model_dir=None):
+def load_models_and_scalers(model_type='best_model', model_dir: Optional[str] = None):
     """
     Load trained models and scalers for classification and regression.
 
     Parameters:
-        model_type (str): Type of model to load (e.g., 'RandomForest', 'GradientBoosting', 'XGBoost')
-        model_dir (Path or str, optional): Directory where models are stored. If None, uses default Config.MODELS_DIR
-
+        model_type (str): Type of model to load (e.g., 'RandomForest', 'GradientBoosting', 'XGBoost').  Default is 'best_model' with RandomForest models.
+        model_dir (str, optional): Directory where models are stored. If None, uses default Config.MODELS_DIR.
     Returns:
         tuple: (classifier_model, regressor_model, classification_scaler, regression_scaler)
     """
@@ -100,7 +99,7 @@ def load_input_data(file_path):
     return input_data
 
 
-def predict_eg_from_file(file_path=None, input_data=None, model_type='best_model', model_dir=None):
+def predict_eg_from_file(file_path=None, input_data=None, model_type='best_model', model_dir: Optional[str] = None):
     """
     Predict band gaps from an input file containing chemical formulas.
 
@@ -108,6 +107,7 @@ def predict_eg_from_file(file_path=None, input_data=None, model_type='best_model
         file_path (str): Path to the input file. Default is None
         input_data (pd.DataFrame, optional): Input data with 'Composition' column. Defaults to None.
         model_type (str): Type of model to use for prediction. Default is 'best_model' with RandomForest models.
+        model_dir (str, optional): Directory where models are stored. If None, uses default Config.MODELS_DIR.
 
     Returns:
         list: Predicted band gaps.
@@ -126,13 +126,14 @@ def predict_eg_from_file(file_path=None, input_data=None, model_type='best_model
     return predict_band_gap(X, classifier_model, regressor_model, scaler_class, scaler_reg)
 
 
-def predict_eg_from_formula(formula, model_type='best_model', model_dir=None):
+def predict_eg_from_formula(formula, model_type='best_model', model_dir: Optional[str] = None):
     """
     Predict band gap from a single chemical formula input.
 
     Parameters:
         formula (str or list): Chemical formula as a string or list of strings.
-        model_type (str): Type of model to use for prediction. Default is 'best_model' with RandomForest models.
+        model_type (str, None): Type of model to use for prediction. Default is 'best_model' with RandomForest models.
+        model_dir (str, optional): Directory where models are stored. If None, uses default Config.MODELS_DIR.
 
     Returns:
         float or int: Predicted band gap value.
