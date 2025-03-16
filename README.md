@@ -71,29 +71,45 @@ We provide several options to use the package
 ### 1. Jupyter Notebook file:
 [Jupyter Notebook file](notebooks/band_gap_prediction_workflow.ipynb) in the `notebooks` directory provides an easy-to-use interface for training models and use them for Band Gap predictions.
 
-### 2. Use package inside your Python Code:
+### 2. Use the package inside your Python Code:
 Train models
 ```python
 from band_gap_ml.model_training import train_and_save_models
 
 train_and_save_models()
 ```
-Use models to make predictions of Band Gaps
+Make predictions of Band Gaps by using the BandGapPredictor class:
 ```python
-from band_gap_ml.band_gap_predictor import predict_eg_from_file, predict_eg_from_formula    
+from band_gap_ml.band_gap_predictor import BandGapPredictor
+
+# Initialize the predictor with default best model
+predictor = BandGapPredictor()
+
+# Or specify a different model type and path to the model
+# predictor = BandGapPredictor(model_type='RandomForest', model_dir= <YOUR_PATH_TO_THE_MODEL>)
+# predictor = BandGapPredictor(model_type='GradientBoosting')
+# predictor = BandGapPredictor(model_type='XGBoost')
 
 # Prediction from csv file containing chemical formulas
-input_file = '../samples/to_predict.csv'
-predictions = predict_eg_from_file(input_file)
-print(predictions)
+input_file = 'samples/to_predict.csv'
+predictions_df = predictor.predict_from_file(input_file)
+print(predictions_df)
 
-#  Prediction from one or multiple chemical formula
+# Prediction from one or multiple chemical formulas
 formula_1 = 'BaLa2In2O7'
 formula_2 = 'TiO2'
 formula_3 = 'Bi4Ti3O12'
 
-predictions = predict_eg_from_formula(formula=[formula_1, formula_2, formula_3])
-print(predictions)
+# Single formula prediction
+single_prediction = predictor.predict_from_formula(formula_1)
+print(single_prediction)
+
+# Multiple formulas prediction
+multiple_predictions = predictor.predict_from_formula([formula_1, formula_2, formula_3])
+print(multiple_predictions)
+
+# Save predictions to a CSV file
+multiple_predictions.to_csv('predictions_results.csv', index=False)
 ```
 
 ### 3. Use frontend web interface
