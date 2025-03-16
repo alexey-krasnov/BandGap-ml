@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from band_gap_ml.band_gap_predictor import predict_eg_from_file, predict_eg_from_formula
+from band_gap_ml.band_gap_predictor import BandGapPredictor
 from band_gap_ml.model_training import train_and_save_models
 from datetime import datetime
 
@@ -17,6 +17,45 @@ if train_button:
     st.write("Training models...")
     train_and_save_models()
     st.success("Models trained successfully!")
+    st.warning("Please refresh the page to use newly trained models.")
+
+
+# Model selection using buttons in a horizontal layout
+st.write("### Select Available Trained Model Type For Prediction:")
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    best_model_btn = st.button('Best Model', key='best_model_btn', use_container_width=True)
+with col2:
+    rf_btn = st.button('RandomForest', key='rf_btn', use_container_width=True)
+with col3:
+    gb_btn = st.button('GradientBoosting', key='gb_btn', use_container_width=True)
+with col4:
+    xgb_btn = st.button('XGBoost', key='xgb_btn', use_container_width=True)
+
+# Determine which model is selected
+if 'selected_model' not in st.session_state:
+    st.session_state.selected_model = 'best_model'
+
+if best_model_btn:
+    st.session_state.selected_model = 'best_model'
+elif rf_btn:
+    st.session_state.selected_model = 'RandomForest'
+elif gb_btn:
+    st.session_state.selected_model = 'GradientBoosting'
+elif xgb_btn:
+    st.session_state.selected_model = 'XGBoost'
+
+# Display currently selected model
+st.info(f"Currently using: **{st.session_state.selected_model}**")
+
+# Initialize predictor with selected model
+@st.cache_resource
+def get_predictor(model_type):
+    return BandGapPredictor(model_type=model_type)
+
+predictor = get_predictor(st.session_state.selected_model)
+
 
 # Function to handle file download
 def download_predictions_as_csv(data_frame, prefix="predicted_band_gaps"):
@@ -48,16 +87,13 @@ if uploaded_file:
 
         # Predict band gaps from the uploaded file
         if st.button('Predict Band Gaps from File'):
-            predictions = predict_eg_from_file(input_data=input_data)
-            st.write("Predictions from the uploaded file:")
+            with st.spinner('Predicting band gaps...'):
+                predictions = predictor.predict_from_file(input_data=input_data)
+                st.write("Predictions from the uploaded file:")
+                st.write(predictions)
 
-            # Create a DataFrame with the predictions
-            prediction_df = pd.DataFrame(predictions, columns=["Predicted Band Gap"])
-            result_df = pd.concat([input_data, prediction_df], axis=1)
-            st.write(result_df)
-
-            # Call the function to allow file download
-            download_predictions_as_csv(result_df)
+                # Call the function to allow file download
+                download_predictions_as_csv(predictions)
 
     except Exception as e:
         st.error(f"Error reading the file: {e}")
@@ -72,15 +108,34 @@ formulas_input = st.text_area(
 if formulas_input:
     formulas = [formula.strip() for formula in formulas_input.split(",")]
     if st.button('Predict Band Gaps from Formulas'):
-        predictions = predict_eg_from_formula(formula=formulas)
-        st.write("Predictions for the entered formulas:")
+        with st.spinner('Predicting band gaps...'):
+            predictions = predictor.predict_from_formula(formula=formulas)
+            st.write("Predictions for the entered formulas:")
+            st.write(predictions)
 
-        # Display predictions in a table
-        prediction_df = pd.DataFrame({"Formula": formulas, "Predicted Band Gap": predictions})
-        st.write(prediction_df)
+            # Call the function to allow file download
+            download_predictions_as_csv(predictions, prefix="predicted_band_gaps_formulas")
 
-        # Call the function to allow file download
-        download_predictions_as_csv(prediction_df, prefix="predicted_band_gaps_formulas")
+# Add information about the selected model
+st.sidebar.header("Model Information")
+st.sidebar.write(f"**Selected Model:** {st.session_state.selected_model}")
+
+if st.session_state.selected_model == 'best_model':
+    st.sidebar.write("""
+    The best model is a RandomForest-based model that has been optimized for band gap prediction.
+    """)
+elif st.session_state.selected_model == 'RandomForest':
+    st.sidebar.write("""
+    Random Forest is an ensemble learning method that operates by constructing multiple decision trees during training.
+    """)
+elif st.session_state.selected_model == 'GradientBoosting':
+    st.sidebar.write("""
+    Gradient Boosting is a machine learning technique that builds an ensemble of decision trees in a stage-wise fashion.
+    """)
+elif st.session_state.selected_model == 'XGBoost':
+    st.sidebar.write("""
+    XGBoost is an optimized distributed gradient boosting library designed to be highly efficient, flexible and portable.
+    """)
 
 def show_footer():
     st.markdown(
