@@ -2,6 +2,8 @@
 """
 from pathlib import Path
 from typing import Optional
+from functools import lru_cache
+import pickle
 
 # Get the absolute path of the current file's directory
 CURRENT_DIR = Path(__file__).resolve().parent
@@ -81,6 +83,95 @@ class Config:
             }
         }
     }
+
+    def __init__(self, model_type: str = 'best_model', model_dir: Optional[str] = None):
+        """
+        Initialize the Config instance with model settings.
+
+        Parameters:
+            model_type (str): Type of model to load (e.g., 'RandomForest', 'GradientBoosting', 'XGBoost').
+                             Default is 'best_model' with RandomForest models.
+            model_dir (str, optional): Directory where models are stored. If None, uses default Config.MODELS_DIR.
+        """
+        self.model_type = model_type
+        self.model_dir = model_dir
+        self._classification_model = None
+        self._regression_model = None
+        self._classification_scaler = None
+        self._regression_scaler = None
+        self._model_paths = self.get_model_paths(model_type, model_dir)
+
+    @property
+    def classification_model(self):
+        """
+        Returns the classification model, initializing it if necessary.
+
+        Returns:
+            object: The initialized classification model.
+        """
+        if self._classification_model is None:
+            self._load_models()
+        return self._classification_model
+
+    @property
+    def regression_model(self):
+        """
+        Returns the regression model, initializing it if necessary.
+
+        Returns:
+            object: The initialized regression model.
+        """
+        if self._regression_model is None:
+            self._load_models()
+        return self._regression_model
+
+    @property
+    def classification_scaler(self):
+        """
+        Returns the classification scaler, initializing it if necessary.
+
+        Returns:
+            object: The initialized classification scaler.
+        """
+        if self._classification_scaler is None:
+            self._load_models()
+        return self._classification_scaler
+
+    @property
+    def regression_scaler(self):
+        """
+        Returns the regression scaler, initializing it if necessary.
+
+        Returns:
+            object: The initialized regression scaler.
+        """
+        if self._regression_scaler is None:
+            self._load_models()
+        return self._regression_scaler
+
+    @lru_cache(maxsize=None)
+    def _load_models(self):
+        """
+        Load all models and scalers from pickle files.
+        """
+        self._classification_model = self._load_model(self._model_paths['classification_model'])
+        self._regression_model = self._load_model(self._model_paths['regression_model'])
+        self._classification_scaler = self._load_model(self._model_paths['classification_scaler'])
+        self._regression_scaler = self._load_model(self._model_paths['regression_scaler'])
+
+    @staticmethod
+    def _load_model(filepath):
+        """
+        Load a model from a pickle file.
+
+        Parameters:
+            filepath (str or Path): Path to the pickle file.
+
+        Returns:
+            object: The loaded model.
+        """
+        with open(filepath, 'rb') as file:
+            return pickle.load(file)
 
     @classmethod
     def create_model_type_directory(cls, model_type, model_dir=None):
