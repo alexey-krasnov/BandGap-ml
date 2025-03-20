@@ -3,6 +3,7 @@
 *.docx
 *.pdf
 *.zip
+*log.txt
 *models.zip
 __pycache__/
 /build/
