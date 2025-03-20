@@ -2,36 +2,10 @@ import streamlit as st
 import pandas as pd
 import requests
 from datetime import datetime
-import psutil
-import subprocess
 from streamlit_navigation_bar import st_navbar
 from about import show_about
 from docs import show_docs
 from band_gap_ml.constants import API_URL
-
-
-def is_uvicorn_running():
-    """
-    Checks if there's any running process with 'uvicorn' and 'band_gap_ml.app:app'.
-    Returns True if such a process is found, otherwise False.
-    """
-    for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
-        try:
-            cmdline = proc.info['cmdline']
-            if cmdline and "uvicorn" in cmdline and "band_gap_ml.app:app" in cmdline:
-                return True
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            continue
-    return False
-
-def start_uvicorn():
-    log_file = open("band_gap_ml_uvicorn_log.txt", "w")
-    process = subprocess.Popen(
-        ["uvicorn", "band_gap_ml.app:app", "--host", "127.0.0.1", "--port", "5039", "--workers", "1", "--timeout-keep-alive", "3600"],
-        stdout=log_file,
-        stderr=subprocess.STDOUT
-    )
-    return process
 
 
 def check_api_connection():
@@ -297,12 +271,4 @@ def main():
     show_footer()
 
 if __name__ == "__main__":
-    try:
-        if not is_uvicorn_running():
-            backend_process = start_uvicorn()
-        else:
-            print("Uvicorn is already running.")
-    except Exception as e:
-        print(f"Error starting backend server: {e}")
-    else:
-        main()
+    main()

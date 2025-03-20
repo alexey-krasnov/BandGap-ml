@@ -66,19 +66,21 @@ python band_gap_ml/model_training.py
 This command executes the training and evaluation of RandomForestClassifier and RandomForestRegressor models using the predefined paths in the module.
 
 ## Usage
-We provide several options to use the package
+We provide several options to use the BandGap-ml package:
 
-### 1. Jupyter Notebook file:
-[Jupyter Notebook file](notebooks/band_gap_prediction_workflow.ipynb) in the `notebooks` directory provides an easy-to-use interface for training models and use them for Band Gap predictions.
+### 1. Jupyter Notebook:
+A [Jupyter Notebook file](notebooks/band_gap_prediction_workflow.ipynb) in the `notebooks` directory provides an easy-to-use interface for training models and using them for Band Gap predictions.
 
-### 2. Use the package inside your Python Code:
-Train models
+### 2. Python Code:
+You can use the package directly in your Python code:
+
+#### Train models:
 ```python
 from band_gap_ml.model_training import train_and_save_models
 
 train_and_save_models()
 ```
-Make predictions of Band Gaps by using the BandGapPredictor class:
+#### Make predictions of Band Gaps by using the BandGapPredictor class:
 ```python
 from band_gap_ml.band_gap_predictor import BandGapPredictor
 
@@ -112,13 +114,24 @@ print(multiple_predictions)
 multiple_predictions.to_csv('predictions_results.csv', index=False)
 ```
 
-### 3. Use frontend web interface
-- Go to https://bandgap-ml.streamlit.app/ to check out the web interface
-- Or run web interface on your local machine. In CLI run the command:
-```bash
-streamlit run frontend/band_gap_ml_app.py --server.address=0.0.0.0 --server.port=5005
-```
-The command will refer you to the BandGap-ml user web interface.
+### 3. Web Service:
+You can use BandGap-ml as a web service in two ways:
+
+a. Use our hosted web interface at: **https://bandgap-ml.streamlit.app/**
+
+b. Run the web service locally:
+    
+- Start the backend:
+    ```bash
+    uvicorn band_gap_ml.app:app --host 127.0.0.1 --port 5039 --workers 1 --timeout-keep-alive 3600
+    ```
+-  Start the frontend (based on Streamlit) in a separate terminal:
+    ```bash
+    streamlit run frontend/band_gap_ml_app.py --server.address=0.0.0.0 --server.port=5040
+    ```
+    The command will automatically refer you to the web interface in browser.
+    
+- Access the BandGap-ml user web interface in your browser at http://127.0.0.1:504
 
 ## Author
 Dr. Aleksei Krasnov
