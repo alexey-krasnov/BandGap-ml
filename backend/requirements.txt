@@ -1,0 +1,10 @@
+fastapi~=0.115.11
+numpy~=2.2.3
+pandas~=2.2.3
+scikit-learn~=1.6.1
+openpyxl~=3.1.5
+pymatgen~=2025.3.10
+pydantic~=2.10.6
+python-multipart~=0.0.20
+uvicorn~=0.34.0
+xgboost~=2.1.4

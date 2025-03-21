@@ -66,21 +66,21 @@ python band_gap_ml/model_training.py
 This command executes the training and evaluation of RandomForestClassifier and RandomForestRegressor models using the predefined paths in the module.
 
 ## Usage
-We provide several options to use the BandGap-ml package:
+We provide several options to use the BandGap-ml package.
 
-### 1. Jupyter Notebook:
+### 1. Jupyter Notebook
 A [Jupyter Notebook file](notebooks/band_gap_prediction_workflow.ipynb) in the `notebooks` directory provides an easy-to-use interface for training models and using them for Band Gap predictions.
 
-### 2. Python Code:
+### 2. Python Code
 You can use the package directly in your Python code:
 
-#### Train models:
+#### 2.1 Train models
 ```python
 from band_gap_ml.model_training import train_and_save_models
 
 train_and_save_models()
 ```
-#### Make predictions of Band Gaps by using the BandGapPredictor class:
+#### 2.2 Make predictions of band gaps by using the BandGapPredictor class:
 ```python
 from band_gap_ml.band_gap_predictor import BandGapPredictor
 
@@ -114,24 +114,53 @@ print(multiple_predictions)
 multiple_predictions.to_csv('predictions_results.csv', index=False)
 ```
 
-### 3. Web Service:
+### 3. Web Service
 You can use BandGap-ml as a web service in two ways:
 
-a. Use our hosted web interface at: **https://bandgap-ml.streamlit.app/**
+#### 3.1 Use our hosted web interface at: **https://bandgap-ml.streamlit.app/**
 
-b. Run the web service locally:
-    
-- Start the backend:
-    ```bash
-    uvicorn band_gap_ml.app:app --host 127.0.0.1 --port 5039 --workers 1 --timeout-keep-alive 3600
-    ```
--  Start the frontend (based on Streamlit) in a separate terminal:
-    ```bash
-    streamlit run frontend/band_gap_ml_app.py --server.address=0.0.0.0 --server.port=5040
-    ```
-    The command will automatically refer you to the web interface in browser.
-    
-- Access the BandGap-ml user web interface in your browser at http://127.0.0.1:504
+#### 3.2  Run the web service locally:
+- Prerequisites
+  - [Docker](https://docs.docker.com/get-docker/)
+  - [Docker Compose](https://docs.docker.com/compose/install/)
+  - [Git](https://git-scm.com/downloads)
+- Build and start the Docker containers
+```bash
+docker compose up -d --build
+```
+
+- Once the containers are running, you can access:
+  -  BandGap-ml frontend web interface in your browser at http://localhost:8080
+  - Backend API: http://localhost:3000
+  - API Documentation: http://localhost:3000/docs
+
+
+- The application runs two main containers:
+  - `frontend`: Vue.js application (Port 8080)
+  - `backend`: FastAPI application running with uvicorn (Port 3000)
+
+- To stop the containers:
+
+```bash
+docker compose down
+```
+
+- To check container status:
+
+```bash
+docker compose ps
+```
+
+- To view container logs:
+
+```bash
+# All containers
+docker compose logs
+
+# Specific container
+docker compose logs frontend
+docker compose logs backend
+```
 
 ## Author
 Dr. Aleksei Krasnov
