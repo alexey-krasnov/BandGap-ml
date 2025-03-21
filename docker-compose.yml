@@ -1,0 +1,31 @@
+# 1. From the BandGap-ml directory, run:
+  # docker-compose up --build
+  # This command will build (or rebuild) the images and start the containers.
+# 2. To stop the containers, you can use:
+  # docker-compose down
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    environment:
+      - VUE_APP_API_URL=http://localhost:3000  # For external access
+      - VUE_APP_INTERNAL_API_URL=http://backend:3000  # For inter-container communication
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=your_database_url_here
+      - PORT=3000  # Specify the port for the backend to listen on
+
+volumes:
+  db_data:

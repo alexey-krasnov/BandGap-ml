@@ -12,7 +12,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="BandGap-ml",
-    version="0.3.3",
+    version="0.4.0",
     description="Project for predicting band gaps of inorganic materials by using ML models",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -33,7 +33,7 @@ setup(
     url="https://github.com/alexey-krasnov/BandGap-ml",
     packages=find_packages(exclude=["tests", "tests.*", "Benchmark"]) + [
         'band_gap_ml.data',
-        'band_gap_ml.models'
+        'band_gap_ml.models',
     ],
     include_package_data=True,  # Ensure package data is included
     package_data={
