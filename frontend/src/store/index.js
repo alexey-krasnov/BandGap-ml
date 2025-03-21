@@ -2,7 +2,8 @@
 import { createStore } from "vuex";
 import axios from "axios";
 
-const API_URL = process.env.VUE_APP_API_URL;
+// Define the API endpoint of the backend server
+const API_URL = "http://localhost:3000";
 
 export default createStore({
   state: {
