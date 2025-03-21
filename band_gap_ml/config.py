@@ -5,14 +5,14 @@ from typing import Optional
 from functools import lru_cache
 import pickle
 
-# Get the absolute path of the current file's directory
-CURRENT_DIR = Path(__file__).resolve().parent
-
 
 class Config:
     """
     Configuration class for managing paths and settings for the project.
     """
+    # Get the absolute path of the current file's directory
+    CURRENT_DIR = Path(__file__).resolve().parent
+
     # Paths for data and models directories
     MODELS_DIR = CURRENT_DIR / 'models'
     DATA_DIR = CURRENT_DIR / 'data'

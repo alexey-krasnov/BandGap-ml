@@ -1,4 +1,4 @@
-# BandGap-ml v0.3.3
+# BandGap-ml v0.4.0
 
 [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://github.com/alexey-krasnov/BandGap-ml/graphs/commit-activity)
@@ -66,19 +66,21 @@ python band_gap_ml/model_training.py
 This command executes the training and evaluation of RandomForestClassifier and RandomForestRegressor models using the predefined paths in the module.
 
 ## Usage
-We provide several options to use the package
+We provide several options to use the BandGap-ml package.
 
-### 1. Jupyter Notebook file:
-[Jupyter Notebook file](notebooks/band_gap_prediction_workflow.ipynb) in the `notebooks` directory provides an easy-to-use interface for training models and use them for Band Gap predictions.
+### 1. Jupyter Notebook
+A [Jupyter Notebook file](notebooks/band_gap_prediction_workflow.ipynb) in the `notebooks` directory provides an easy-to-use interface for training models and using them for Band Gap predictions.
 
-### 2. Use the package inside your Python Code:
-Train models
+### 2. Python Code
+You can use the package directly in your Python code:
+
+#### 2.1 Train models
 ```python
 from band_gap_ml.model_training import train_and_save_models
 
 train_and_save_models()
 ```
-Make predictions of Band Gaps by using the BandGapPredictor class:
+#### 2.2 Make predictions of band gaps by using the BandGapPredictor class:
 ```python
 from band_gap_ml.band_gap_predictor import BandGapPredictor
 
@@ -112,13 +114,53 @@ print(multiple_predictions)
 multiple_predictions.to_csv('predictions_results.csv', index=False)
 ```
 
-### 3. Use frontend web interface
-- Go to https://bandgap-ml.streamlit.app/ to check out the web interface
-- Or run web interface on your local machine. In CLI run the command:
+### 3. Web Service
+You can use BandGap-ml as a web service in two ways:
+
+#### 3.1 Use our hosted web interface at: **https://bandgap-ml.streamlit.app/**
+
+#### 3.2  Run the web service locally:
+- Prerequisites
+  - [Docker](https://docs.docker.com/get-docker/)
+  - [Docker Compose](https://docs.docker.com/compose/install/)
+  - [Git](https://git-scm.com/downloads)
+- Build and start the Docker containers
 ```bash
-streamlit run frontend/band_gap_ml_app.py --server.address=0.0.0.0 --server.port=5005
+docker compose up -d --build
 ```
-The command will refer you to the BandGap-ml user web interface.
+
+- Once the containers are running, you can access:
+  -  BandGap-ml frontend web interface in your browser at http://localhost:8080
+  - Backend API: http://localhost:3000
+  - API Documentation: http://localhost:3000/docs
+
+
+- The application runs two main containers:
+  - `frontend`: Vue.js application (Port 8080)
+  - `backend`: FastAPI application running with uvicorn (Port 3000)
+
+- To stop the containers:
+
+```bash
+docker compose down
+```
+
+- To check container status:
+
+```bash
+docker compose ps
+```
+
+- To view container logs:
+
+```bash
+# All containers
+docker compose logs
+
+# Specific container
+docker compose logs frontend
+docker compose logs backend
+```
 
 ## Author
 Dr. Aleksei Krasnov
