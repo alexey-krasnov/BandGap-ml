@@ -1,10 +1,8 @@
-# From the BandGap-ml directory, run:
-# docker-compose up --build
-# This command will build (or rebuild) the images and start the containers.
-# To stop the containers, you can use:
-# docker-compose down
-
-version: '3.8'
+# 1. From the BandGap-ml directory, run:
+  # docker-compose up --build
+  # This command will build (or rebuild) the images and start the containers.
+# 2. To stop the containers, you can use:
+  # docker-compose down
 
 services:
   frontend:
