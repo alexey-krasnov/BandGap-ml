@@ -33,7 +33,7 @@ setup(
     url="https://github.com/alexey-krasnov/BandGap-ml",
     packages=find_packages(exclude=["tests", "tests.*", "Benchmark"]) + [
         'band_gap_ml.data',
-        'band_gap_ml.models'
+        'band_gap_ml.models',
     ],
     include_package_data=True,  # Ensure package data is included
     package_data={
