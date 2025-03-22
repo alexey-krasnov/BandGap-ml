@@ -39,7 +39,7 @@ setup(
     package_data={
         'band_gap_ml': [
             'data/*.csv',  # Include all CSV files in the data subfolder
-            'models/*.pkl',  # Include all model files in the models subfolder
+            'models/**/*.pkl',  # Include all model files in the models subfolder
         ],
     },
     install_requires=read_requirements(),
