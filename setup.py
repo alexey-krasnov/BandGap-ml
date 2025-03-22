@@ -5,6 +5,9 @@ def read_requirements():
     with open("requirements.txt", "r", encoding="utf-8") as fh:
         return fh.read().splitlines()
 
+# Read the version from version.py
+with open("band_gap_ml/__init__.py", "r", encoding="utf-8") as fh:
+    exec(fh.read())
 
 # Read the contents of README.md
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -12,7 +15,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="BandGap-ml",
-    version="0.4.1",
+    version=__version__,
     description="Project for predicting band gaps of inorganic materials by using ML models",
     long_description=long_description,
     long_description_content_type="text/markdown",

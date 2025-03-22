@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from band_gap_ml.band_gap_predictor import BandGapPredictor
+from band_gap_ml import __version__
 
 # Start time to calculate loading time
 start = time.time()
@@ -22,7 +23,7 @@ start = time.time()
 app = FastAPI(
     title="Band Gap Predictor API",
     description="API for predicting band gaps of materials based on their chemical formulas",
-    version="0.3.3"
+    version=__version__
 )
 
 app.add_middleware(
