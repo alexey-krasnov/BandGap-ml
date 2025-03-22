@@ -25,15 +25,13 @@ RUN conda update -n base -c conda-forge conda && \
     conda install -y -c conda-forge python=${PYTHON_VERSION} && \
     conda clean -afy
 
-# Set the working directory in the container
 WORKDIR /code
-
 
 # Upgrade pip
 RUN python -m pip install --upgrade pip
 
 # Install the latest version of BandGap-ml from Git
-RUN pip install --no-cache-dir BandGap-ml@git+https://github.com/alexey-krasnov/BandGap-ml.git
+RUN pip install git+https://github.com/alexey-krasnov/BandGap-ml.git
 
 # Make port 3000 available to the world outside this container
 EXPOSE 3000
