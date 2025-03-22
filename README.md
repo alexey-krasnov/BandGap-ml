@@ -1,4 +1,4 @@
-# BandGap-ml v0.4.0
+# BandGap-ml v0.4.1
 
 [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://github.com/alexey-krasnov/BandGap-ml/graphs/commit-activity)
@@ -119,7 +119,7 @@ You can use BandGap-ml as a web service in two ways:
 
 #### 3.1 Use our hosted web interface at: **https://bandgap-ml.streamlit.app/**
 
-#### 3.2  Run the web service locally:
+#### 3.2  Run the web service locally with Docker:
 - Prerequisites
   - [Docker](https://docs.docker.com/get-docker/)
   - [Docker Compose](https://docs.docker.com/compose/install/)
@@ -130,7 +130,7 @@ docker compose up -d --build
 ```
 
 - Once the containers are running, you can access:
-  -  BandGap-ml frontend web interface in your browser at http://localhost:8080
+  - BandGap-ml frontend web interface in your browser at http://localhost:8080
   - Backend API: http://localhost:3000
   - API Documentation: http://localhost:3000/docs
 
@@ -161,6 +161,18 @@ docker compose logs
 docker compose logs frontend
 docker compose logs backend
 ```
+
+#### 3.3  Run the backend and frontend parts of the web service separately:
+- Backend 
+```bash
+uvicorn band_gap_ml.app:app --host 127.0.0.1 --port 3000 --workers 1 --timeout-keep-alive 3600
+```
+
+- Frontend
+```bash
+cd BandGap-ml/frontend
+npm run serve
+``` 
 
 ## Author
 Dr. Aleksei Krasnov
