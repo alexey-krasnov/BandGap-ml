@@ -1,0 +1,4 @@
+include requirements.txt
+include README.md
+recursive-include band_gap_ml/data *.csv
+recursive-include band_gap_ml/models *.pkl
