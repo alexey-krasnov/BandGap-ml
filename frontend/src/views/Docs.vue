@@ -6,7 +6,7 @@
       API for predicting band gaps of inorganic materials based on their
       chemical formulas
     </p>
-    <p>Version: 0.4.1</p>
+    <p>Version: 0.4.2</p>
 
     <div class="left-aligned-content">
       <h2>Endpoints</h2>
