@@ -1,15 +1,16 @@
 <template>
   <div class="home">
+    <AppLogo />
     <h1>BandGap-ml: Band Gap Prediction</h1>
     <p>
-      This app allows you to predict the band gap of materials either by
-      uploading a CSV file or by entering chemical formulas.
+      This web app allows you to predict the band gap of inorganic materials
+      either by uploading a CSV file or by entering chemical formulas.
     </p>
 
     <div class="model-selection">
       <h2>Select Model for Prediction</h2>
       <select v-model="selectedModel">
-        <option value="best_model">Best Model</option>
+        <option value="best_model">Best Model (Random Forest-based)</option>
         <option value="RandomForest">Random Forest</option>
         <option value="GradientBoosting">Gradient Boosting</option>
         <option value="XGBoost">XGBoost</option>
@@ -50,7 +51,7 @@
     <div class="manual-input">
       <h2>
         Enter Chemical Formulas
-        <span class="small-text">(Formulas should be comma separated)</span>
+        <span class="small-text">(comma separated)</span>
       </h2>
       <textarea
         v-model="formulasInput"
@@ -96,9 +97,13 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import AppLogo from "@/components/Logo.vue";
 
 export default {
   name: "HomePage",
+  components: {
+    AppLogo,
+  },
   data() {
     return {
       selectedModel: "best_model",
@@ -170,10 +175,11 @@ export default {
 </script>
 <style scoped>
 .home {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 20px;
-  padding-bottom: 100px;
+  padding: 10px;
+  padding-bottom: 60px;
+  text-align: center;
 }
 
 .model-selection,

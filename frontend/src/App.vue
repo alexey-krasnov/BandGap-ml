@@ -2,8 +2,8 @@
   <div id="app">
     <nav>
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
       <router-link to="/docs">API Documentation</router-link> |
+      <router-link to="/about">About</router-link> |
       <a href="https://github.com/alexey-krasnov/BandGap-ml" target="_blank"
         >GitHub</a
       >
@@ -11,13 +11,13 @@
     <router-view></router-view>
     <footer>
       <p>
-        &copy; 2024 BandGap-ml. Predicting material band gaps based on chemical
-        composition.
+        &copy; 2024 BandGap-ml. Predicting materials band gaps based on the
+        chemical composition.
       </p>
       <p>
         Developed by
         <a href="https://github.com/alexey-krasnov" target="_blank"
-          >Aleksei Krasnov</a
+          >Dr. Aleksei Krasnov</a
         >. All rights reserved.
       </p>
     </footer>
