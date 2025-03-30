@@ -78,8 +78,8 @@ async def predict_band_gap(
         for _, row in result_df.iterrows():
             predictions.append({
                 "composition": str(row["Composition"]),
-                "is_semiconductor": int(row["is_semiconductor"]),
-                "semiconductor_probability": float(row["semiconductor_probability"]),
+                # "is_semiconductor": int(row["is_semiconductor"]),
+                # "semiconductor_probability": float(row["semiconductor_probability"]),
                 "band_gap": float(row["band_gap"])
             })
         return predictions

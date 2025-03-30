@@ -16,3 +16,4 @@ __pycache__/
 /comparison
 *.ipynb_checkpoints*
 notebooks/band_gap_prediction_workflow.ipynb
+build_and_upload.sh
