@@ -76,16 +76,12 @@
         <thead>
           <tr>
             <th>Composition</th>
-            <th>Is Semiconductor</th>
-            <th>Semiconductor Probability</th>
             <th>Band Gap</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="pred in predictions" :key="pred.composition">
             <td>{{ pred.composition }}</td>
-            <td>{{ pred.is_semiconductor }}</td>
-            <td>{{ pred.semiconductor_probability.toFixed(4) }}</td>
             <td>{{ pred.band_gap.toFixed(4) }}</td>
           </tr>
         </tbody>
@@ -147,21 +143,11 @@ export default {
     },
 
     downloadPredictions() {
-      const headers = [
-        "Composition",
-        "Is Semiconductor",
-        "Semiconductor Probability",
-        "Band Gap",
-      ];
+      const headers = ["Composition", "Band Gap"];
       const csv = [
         headers.join(","),
         ...this.predictions.map((pred) =>
-          [
-            pred.composition,
-            pred.is_semiconductor,
-            pred.semiconductor_probability.toFixed(4),
-            pred.band_gap.toFixed(4),
-          ].join(",")
+          [pred.composition, pred.band_gap.toFixed(4)].join(",")
         ),
       ].join("\n");
       const blob = new Blob([csv], { type: "text/csv" });
