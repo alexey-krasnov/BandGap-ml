@@ -17,7 +17,7 @@
 Project for predicting band gaps of inorganic materials by using ML models.
 
 ## Try out new Frontend Web Interface running at: 
-### bandgap-ml.vercel.app
+### [https://bandgap-ml.vercel.app](https://bandgap-ml.vercel.app/)
 
 
 ## Prepare Python Workspace Environment with Conda
@@ -117,7 +117,7 @@ multiple_predictions.to_csv('predictions_results.csv', index=False)
 ### 3. Web Service
 You can use BandGap-ml as a web service in two ways:
 
-#### 3.1 Use our hosted web interface at: **bandgap-ml.vercel.app**
+#### 3.1 Use our hosted web interface at: **[https://bandgap-ml.vercel.app](https://bandgap-ml.vercel.app/)**
 
 #### 3.2  Run the web service locally with Docker:
 - Prerequisites
