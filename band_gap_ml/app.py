@@ -11,6 +11,7 @@ from typing import List, Optional, Union
 
 from fastapi import FastAPI, HTTPException, Form, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from band_gap_ml.band_gap_predictor import BandGapPredictor
@@ -49,11 +50,17 @@ class PredictionResult(BaseModel):
     semiconductor_probability: float
     band_gap: float
 
+    class Config:
+        """Pydantic feature that  allows the model to work with ORM (Object-Relational Mapping) objects or
+          dict-like structures."""
+        orm_mode = True
+
 @app.post("/predict_bandgap", response_model=List[PredictionResult])
 async def predict_band_gap(
         formula: Optional[Union[str, List[str]]] = Form(None),
         model_type: Optional[str] = Form("best_model"),
-        file: Optional[UploadFile] = File(None)
+        file: Optional[UploadFile] = File(None),
+        verbose_output: bool= Form(False),
 ):
     try:
         current_predictor = BandGapPredictor(model_type=model_type) if model_type != "best_model" else predictor
@@ -73,16 +80,12 @@ async def predict_band_gap(
         else:
             raise ValueError("Please provide either a formula or a file.")
 
-        # Convert DataFrame to list of dictionaries
-        predictions = []
-        for _, row in result_df.iterrows():
-            predictions.append({
-                "composition": str(row["Composition"]),
-                "is_semiconductor": int(row["is_semiconductor"]),
-                "semiconductor_probability": float(row["semiconductor_probability"]),
-                "band_gap": float(row["band_gap"])
-            })
-        return predictions
+        # Convert DataFrame to list of dictionaries and return as JSONResponse
+        if not verbose_output:
+            result_df.drop(columns=['is_semiconductor', 'semiconductor_probability'], inplace=True)
+        response_results = result_df.to_dict(orient='records')
+        print(f'response_results: {response_results}')
+        return JSONResponse(content=response_results)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error during prediction: {str(e)}")
 
