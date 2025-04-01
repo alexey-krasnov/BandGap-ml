@@ -3,8 +3,8 @@ import { createStore } from "vuex";
 import axios from "axios";
 
 // Define the API endpoint of the backend server
-const API_URL = "https://bandgap-ml.onrender.com";
-//const API_URL = "http://localhost:3000";
+//const API_URL = "https://bandgap-ml.onrender.com";
+const API_URL = "http://localhost:3000";
 
 export default createStore({
   state: {

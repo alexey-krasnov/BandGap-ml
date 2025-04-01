@@ -31,14 +31,14 @@ class BandGapPredictor:
         Prepare feature vectors for input chemical formulas using the FormulaVectorizer.
 
         Parameters:
-            input_data (pd.DataFrame): Input data containing a 'Composition' column.
+            input_data (pd.DataFrame): Input data containing a 'composition' column.
 
         Returns:
             pd.DataFrame: Transformed feature vectors.
         """
         features = []
 
-        for formula in input_data['Composition']:
+        for formula in input_data['composition']:
             vectorized = self.vectorizer.vectorize_formula(formula)
             features.append(vectorized)
 
@@ -106,7 +106,7 @@ class BandGapPredictor:
             file_path (str): Path to the input file.
 
         Returns:
-            pd.DataFrame: Input data with 'Composition' column.
+            pd.DataFrame: Input data with 'composition' column.
         """
         if file_path.endswith('.csv'):
             input_data = pd.read_csv(file_path)
@@ -117,13 +117,15 @@ class BandGapPredictor:
 
         return input_data
 
-    def predict_from_file(self, file_path: Optional[str] = None, input_data: Optional[pd.DataFrame] = None) -> pd.DataFrame:
+    def predict_from_file(self, file_path: Optional[str] = None,
+                          input_data: Optional[pd.DataFrame] = None
+                          ) -> pd.DataFrame:
         """
         Predict band gaps from an input file containing chemical formulas.
 
         Parameters:
             file_path (str, optional): Path to the input file. Default is None.
-            input_data (pd.DataFrame, optional): Input data with 'Composition' column. Defaults to None.
+            input_data (pd.DataFrame, optional): Input data with 'composition' column. Defaults to None.
 
         Returns:
             pd.DataFrame: DataFrame with predictions.
@@ -131,9 +133,9 @@ class BandGapPredictor:
         if file_path:
             input_data = self.load_input_data(file_path)
 
-        if 'Composition' not in input_data.columns:
+        if 'composition' not in input_data.columns:
             first_column = input_data.columns[0]
-            input_data.rename(columns={first_column: 'Composition'}, inplace=True)
+            input_data.rename(columns={first_column: 'composition'}, inplace=True)
 
         X = self.prepare_features(input_data)
 
@@ -154,11 +156,11 @@ class BandGapPredictor:
         Returns:
             pd.DataFrame: DataFrame with predictions.
         """
-        input_dict = {'Composition': []}
+        input_dict = {'composition': []}
         if isinstance(formula, list):
-            input_dict['Composition'].extend(formula)
+            input_dict['composition'].extend(formula)
         elif isinstance(formula, str):
-            input_dict['Composition'].append(formula)
+            input_dict['composition'].append(formula)
         input_data = pd.DataFrame(input_dict)
 
         return self.predict_from_file(input_data=input_data)
