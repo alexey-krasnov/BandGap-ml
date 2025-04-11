@@ -5,8 +5,8 @@ import axios from "axios";
 // Define the API endpoint of the backend server
 const API_URL =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:3000" // Local testing
-    : process.env.VUE_APP_PRODUCTION_API_URL; // Production
+    ? "http://localhost:3000" // Local testing and development mode
+    : process.env.VUE_APP_PRODUCTION_API_URL; // Production API
 
 console.log("Current API URL:", API_URL); // For debugging
 
