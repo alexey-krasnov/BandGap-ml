@@ -8,7 +8,8 @@ const API_URL =
     ? "http://localhost:3000" // Local testing and development mode
     : process.env.VUE_APP_PRODUCTION_API_URL; // Production API
 
-console.log("Current API URL:", API_URL); // For debugging
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("API_URL:", API_URL);
 
 export default createStore({
   state: {
