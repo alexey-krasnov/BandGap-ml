@@ -6,7 +6,7 @@ import axios from "axios";
 const API_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000" // Local testing
-    : "https://bandgap-ml.onrender.com"; // Production
+    : process.env.VUE_APP_PRODUCTION_API_URL; // Production
 
 console.log("Current API URL:", API_URL); // For debugging
 
