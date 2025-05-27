@@ -29,7 +29,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://bandgap-ml.vercel.app"],  # Add Vercel domain
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

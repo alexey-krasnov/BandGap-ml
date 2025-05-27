@@ -6,7 +6,8 @@
       # Use the current directory (.) as the build context, which includes both backend and band_gap_ml directories
       # Tag the resulting image as bandgap-ml-backend
 # 3. Run the container:
-     #    # docker run -p 3000:3000 bandgap-ml-backend
+      # docker run -d -p 3000:3000 bandgap-ml-backend
+# The -d flag (detached mode) will run the container in the background and not show the output logs in your terminal.
 
 FROM condaforge/miniforge3:latest AS bandgap-ml-backend
 
