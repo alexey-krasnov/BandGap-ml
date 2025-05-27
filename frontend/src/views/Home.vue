@@ -10,8 +10,9 @@
     <div class="model-selection">
       <h2>Select Model for Prediction</h2>
       <select v-model="selectedModel">
-        <option value="best_model">Best Model (Random Forest-based)</option>
-        <option value="RandomForest">Random Forest</option>
+        <option value="best_model">
+          Best Model (Optimized Random Forest-based)
+        </option>
         <option value="GradientBoosting">Gradient Boosting</option>
         <option value="XGBoost">XGBoost</option>
       </select>
@@ -20,11 +21,8 @@
     <div class="model-info">
       <h3>Model Information</h3>
       <p v-if="selectedModel === 'best_model'">
-        The best model is a RandomForest-based model that has been optimized for
-        band gap prediction.
-      </p>
-      <p v-else-if="selectedModel === 'RandomForest'">
-        Random Forest is an ensemble learning method that operates by
+        The best model for band gap prediction is the optimized Random Forest
+        model. Random Forest is an ensemble learning method that operates by
         constructing multiple decision trees during training.
       </p>
       <p v-else-if="selectedModel === 'GradientBoosting'">
