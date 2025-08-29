@@ -176,7 +176,7 @@ npm run serve
 
 ## Author
 Dr. Aleksei Krasnov
-alexeykrasnov1989@gmail.com
+dr.aleksei.krasnov@gmail.com
 
 ## Citation
 - Zhuo. Y, Mansouri Tehrani., and Brgoch. J, Predicting the band gaps of inorganic solids by machine learning, J. Phys. Chem. Lett. 2018, 9, 1668-1673. https://doi.org/10.1021/acs.jpclett.8b00124
